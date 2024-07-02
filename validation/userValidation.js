@@ -140,9 +140,9 @@ const UpdateuserSchema = Joi.object({
             'string.max': 'Name cannot exceed 50 characters',
             'any.required': 'Name is required'
         }),
-    accountNumber: Joi.string().pattern(/^[0-9]{10,12}$/).required()
+    accountNumber: Joi.string().pattern(/^[0-9]{14}$/).required()
         .messages({
-            'string.pattern.base': 'Account number must be 10-12 digits long',
+            'string.pattern.base': 'Account number must be 14 digits long',
             'string.empty': 'Account number is required',
             'any.required': 'Account number is required'
         }),

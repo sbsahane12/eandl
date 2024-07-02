@@ -1368,8 +1368,8 @@ exports.downloadUsersDataWord = async (req, res) => {
 
         res.download(filePath, (err) => {
             if (err) {
-                console.error(err);
-                res.status(500).json({ error: 'Error downloading Word file' });
+                req.flash('error', 'Any User In This Year Has Not Completed Any Schemes,So You Can Not Download Excel File');
+                res.redirect(`/admin/schemes/${year}`);
             } else {
                 fs.unlinkSync(filePath);
             }
@@ -1443,8 +1443,8 @@ exports.downloadUsersDataExcel = async (req, res) => {
 
         res.download(excelFilePath, (err) => {
             if (err) {
-                console.error(err);
-                res.status(500).json({ error: 'Error downloading Excel file' });
+                req.flash('error', 'Any User In This Year Has Not Completed Any Schemes,So You Can Not Download Excel File');
+                res.redirect(`/admin/schemes/${year}`);
             } else {
                 fs.unlinkSync(excelFilePath);
             }
