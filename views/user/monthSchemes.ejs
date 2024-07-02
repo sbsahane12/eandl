@@ -1,0 +1,92 @@
+<% layout('layouts/userboilerplate') %>
+
+<body>
+    <div class="container mt-5 text-center " style="border:1px solid #c471f5; ">
+        <hr class="my-4">
+        <h1 class="text-center mb-4" style="color: #c471f5;">
+            SCHEMS IN <%= new Date(2024, month, 1).toLocaleString('default', { month: 'long' }).toUpperCase() %> MONTH
+        </h1>
+        <hr>
+
+        <!-- Ground Schemes Section -->
+        <div class="btn toggle-header mt-2 mb-4" onclick="toggleSection('groundSchemes')" style="cursor: pointer; background-color: #c471f5; width: 100%;color: white;">
+            Ground Schemes
+        </div>
+        <div id="groundSchemes" class="toggle-section">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="table mb-0">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Scheme Name</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Hours Worked</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (groundSchemes.length > 0) { %>
+                            <% groundSchemes.forEach((scheme, index) => { %>
+                                <tr>
+                                    <th scope="row" style="color: #666666;"><%= index + 1 %></th>
+                                    <td><%= scheme.schemeName %></td>
+                                    <td><%= scheme.date.toDateString() %></td>
+                                    <td><%= scheme.hoursWorked %></td>
+                                    <td><%= scheme.completed ? 'Completed' : 'Pending' %></td>
+                                </tr>
+                            <% }) %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="5" class="text-center">No ground schemes available for this month.</td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+     
+        <!-- Department Schemes Section -->
+        <div class="btn toggle-header mt-2 mb-4" onclick="toggleSection('departmentSchemes')" style="cursor: pointer; background-color: #c471f5; width: 100%; color: white;">
+            Department Schemes
+        </div>
+        <div id="departmentSchemes" class="toggle-section">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="table mb-0">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Scheme Name</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Hours Worked</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (departmentSchemes.length > 0) { %>
+                            <% departmentSchemes.forEach((scheme, index) => { %>
+                                <tr>
+                                    <th scope="row" style="color: #666666;"><%= index + 1 %></th>
+                                    <td><%= scheme.schemeName %></td>
+                                    <td><%= scheme.date.toDateString() %></td>
+                                    <td><%= scheme.hoursWorked %></td>
+                                    <td><%= scheme.completed ? 'Completed' : 'Pending' %></td>
+                                </tr>
+                            <% }) %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="5" class="text-center">No department schemes available for this month.</td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            section.classList.toggle('d-none');
+        }
+    </script>
+</body>

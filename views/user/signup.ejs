@@ -1,0 +1,148 @@
+<% layout('layouts/userboilerplate') %>
+    <body>
+        <div class="row d-flex justify-content-center align-items-center">
+        
+            <div class="col-md-9 col-lg-6 col-xl-5">
+                <img src="/image/signup.png"
+                    class="img-fluid" alt="Sample image">
+            </div>
+            <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+                <form class="mx-1 mx-md-4 needs-validation mt-4" action="/user/signup" method="POST"
+                            enctype="multipart/form-data" novalidate>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <input type="text" id="username" name="username" class="form-control"
+                                            placeholder="Enter Username" required
+                                            style="color: #c471f5; border-color: #c471f5;" />
+                                        <label class="form-label" for="username"
+                                            style="color: #c471f5;">Username</label>
+                                        <div class="invalid-feedback" style="color: red;">
+                                            Please enter a username.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <input type="text" id="name" name="name" class="form-control"
+                                            placeholder="Enter Full Name" required
+                                            style="color: #c471f5; border-color: #c471f5;" />
+                                        <label class="form-label" for="name" style="color: #c471f5;">Full
+                                            Name</label>
+                                        <div class="invalid-feedback" style="color: red;">
+                                            Please enter your full name.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <input type="text" id="accountNumber" name="accountNumber" class="form-control"
+                                            placeholder="Enter Account Number (14 digits)" required maxlength="14"
+                                            style="color: #c471f5; border-color: #c471f5;" />
+                                        <label class="form-label" for="accountNumber" style="color: #c471f5;">Account
+                                            Number</label>
+                                        <div class="invalid-feedback" style="color: red;">
+                                            Please enter your 14-digit account number.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <input type="email" id="email" name="email" class="form-control"
+                                            placeholder="Enter Email" required
+                                            style="color: #c471f5; border-color: #c471f5;" />
+                                        <label class="form-label" for="email" style="color: #c471f5;">Email
+                                            address</label>
+                                        <div class="invalid-feedback" style="color: red;">
+                                            Please enter a valid email address.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <input type="password" id="password" name="password" class="form-control"
+                                            placeholder="Enter Password" required
+                                            style="color: #c471f5; border-color: #c471f5;" />
+                                        <label class="form-label" for="password"
+                                            style="color: #c471f5;">Password</label>
+                                        <div class="invalid-feedback" style="color: red;">
+                                            Please enter a password.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <input type="text" id="mobile" name="mobile" class="form-control"
+                                            placeholder="Enter Mobile Number" required
+                                            style="color: #c471f5; border-color: #c471f5;" />
+                                        <label class="form-label" for="mobile" style="color: #c471f5;">Mobile
+                                            Number</label>
+                                        <div class="invalid-feedback" style="color: red;">
+                                            Please enter your mobile number.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <input type="number" id="startYear" name="startYear" class="form-control"
+                                            placeholder="Enter Start Year" required
+                                            style="color: #c471f5; border-color: #c471f5;" />
+                                        <label class="form-label" for="startYear" style="color: #c471f5;">Start
+                                            Year</label>
+                                        <div class="invalid-feedback" style="color: red;">
+                                            Please enter the start year.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        <input type="number" id="endYear" name="endYear" class="form-control"
+                                            placeholder="Enter End Year" required
+                                            style="color: #c471f5; border-color: #c471f5;" />
+                                        <label class="form-label" for="endYear" style="color: #c471f5;">End
+                                            Year</label>
+                                        <div class="invalid-feedback" style="color: red;">
+                                            Please enter the end year.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="formFile" class="form-label" style="color: #c471f5;">Profile
+                                    Picture</label>
+                                <input type="file" class="form-control" id="formFile" name="photo" required
+                                    style="color: #c471f5; border-color: #c471f5;" />
+                                <div class="invalid-feedback" style="color: red;">
+                                    Please upload your profile picture.
+                                </div>
+                            </div>
+
+                            <input type="hidden" name="role" value="user">
+                            <div class="d-flex justify-content-center mb-3 mb-lg-4">
+                                <button type="submit" class="btn btn-lg"
+                                    style="background-color: #c471f5; color: white;">Sign Up</button>
+                            </div>
+                            <p class="small fw-bold mt-2 pt-1 mb-0" style="color: #c471f5;">Already have an account? <a
+                                    href="/user/login" class="link-danger" style="color: #c471f5;">Login</a>
+                                </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Forget Password Modal -->
+    </body>

@@ -1,0 +1,123 @@
+<% layout('layouts/adminboilerplate') %>
+<body>
+    <div class="container mt-1">
+        <h1 class="text-center mb-2" style="color: #c471f5;">Add New Earn And Learn Student</h1>
+        <hr>
+        <form action="/admin/createUser" method="POST" class="col-lg-6 col-md-8 col-sm-10 mx-auto  rounded  needs-validation" novalidate style="border-color: #c471f5;">
+            <!-- Name -->
+            <div class="form-outline mb-1">
+                <label for="name" class="form-label" style="color: #c471f5;">Name:</label>
+                <input type="text" class="form-control" id="name" name="name" required style="color: #c471f5; border-color: #c471f5;">
+                <div class="invalid-feedback" style="color: red;">
+                    Please enter a name.
+                </div>
+            </div>
+
+            <!-- Account Number -->
+            <div class="form-outline mb-1">
+                <label for="accountNumber" class="form-label" style="color: #c471f5;">Account Number:</label>
+                <input type="text" class="form-control" id="accountNumber" name="accountNumber" required maxlength="14" style="color: #c471f5; border-color: #c471f5;">
+                <div class="invalid-feedback" style="color: red;">
+                    Please enter a 14-digit account number.
+                </div>
+            </div>
+
+            <!-- Username -->
+            <div class="form-outline mb-1">
+                <label for="username" class="form-label" style="color: #c471f5;">Username:</label>
+                <input type="text" class="form-control" id="username" name="username" required style="color: #c471f5; border-color: #c471f5;">
+                <div class="invalid-feedback" style="color: red;">
+                    Please enter a username.
+                </div>
+            </div>
+
+            <!-- Email -->
+            <div class="form-outline mb-1">
+                <label for="email" class="form-label" style="color: #c471f5;">Email:</label>
+                <input type="email" class="form-control" id="email" name="email" required style="color: #c471f5; border-color: #c471f5;">
+                <div class="invalid-feedback" style="color: red;">
+                    Please enter a valid email address.
+                </div>
+            </div>
+
+            <!-- Mobile -->
+            <div class="form-outline mb-1">
+                <label for="mobile" class="form-label" style="color: #c471f5;">Mobile:</label>
+                <input type="text" class="form-control" id="mobile" name="mobile" required style="color: #c471f5; border-color: #c471f5;">
+                <div class="invalid-feedback" style="color: red;">
+                    Please enter a mobile number.
+                </div>
+            </div>
+
+            <!-- Photo URL -->
+            <div class="form-outline mb-1">
+                <label for="photo" class="form-label" style="color: #c471f5;">Photo URL:</label>
+                <input type="text" class="form-control" id="photo" name="photo" style="color: #c471f5; border-color: #c471f5;">
+                <div class="invalid-feedback" style="color: red;">
+                    Please enter a photo URL.
+                </div>
+            </div>
+
+            <!-- Role -->
+            <div class="form-outline mb-1">
+                <label for="role" class="form-label" style="color: #c471f5;">Role:</label>
+                <select id="role" name="role" class="form-control" required style="color: #c471f5; border-color: #c471f5;">
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                </select>
+                <div class="invalid-feedback" style="color: red;">
+                    Please select a role.
+                </div>
+            </div>
+
+            <!-- Verified -->
+            <div class="form-outline mb-1">
+                <label for="is_verified" class="form-label" style="color: #c471f5;">Verified:</label>
+                <select id="is_verified" name="is_verified" class="form-control" required style="color: #c471f5; border-color: #c471f5;">
+                    <option value="true">True</option>
+                    <option value="false">False</option>
+                </select>
+                <div class="invalid-feedback" style="color: red;">
+                    Please select a Verified or not.
+                </div>
+            </div>
+
+            <!-- Start Year -->
+            <div class="form-outline mb-1">
+                <label for="startYear" class="form-label" style="color: #c471f5;">Start Year:</label>
+                <input type="number" class="form-control" id="startYear" name="startYear" required style="color: #c471f5; border-color: #c471f5;">
+                <div class="invalid-feedback" style="color: red;">
+                    Please enter the start year.
+                </div>
+            </div>
+
+            <!-- End Year -->
+            <div class="form-outline mb-1">
+                <label for="endYear" class="form-label" style="color: #c471f5;">End Year:</label>
+                <input type="number" class="form-control" id="endYear" name="endYear" required style="color: #c471f5; border-color: #c471f5;">
+                <div class="invalid-feedback" style="color: red;">
+                    Please enter the end year.
+                </div>
+            </div>
+
+            <!-- Password -->
+            <div class="form-outline mb-3">
+                <label for="password" class="form-label" style="color: #c471f5;">Password:</label>
+                <input type="password" class="form-control" id="password" name="password" required style="color: #c471f5; border-color: #c471f5;">
+                <div class="invalid-feedback" style="color: red;">
+                    Please enter a password.
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary btn-block mt-4" style="background-color: #c471f5;">Create User</button>
+                <a href="/admin/manageUsers" class="btn btn-secondary  btn-block mt-4" style="background-color: #c471f5; color: white;">Back to Manage Users</a>
+            </div>
+        </form>
+      
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    
+</body>

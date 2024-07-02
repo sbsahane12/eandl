@@ -1,0 +1,97 @@
+<% layout('layouts/userboilerplate') %>
+
+    <body>
+        <div class="row d-flex justify-content-center align-items-center">
+        
+            <div class="col-md-9 col-lg-6 col-xl-5">
+                <img src="/image/login.png"
+                    class="img-fluid" alt="Sample image">
+            </div>
+            <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+                <form action="/user/login" method="POST" class="needs-validation" novalidate>
+                    <!-- Email input -->
+                    <!-- Email input -->
+
+                    <div data-mdb-input-init class="form-outline mb-4">
+                        <label class="form-label" for="form3Example3" style="color: #c471f5;">Enter Email</label>
+                        <input type="email" id="form3Example3" class="form-control form-control-lg"
+                            placeholder="Enter a valid Email" name="email"
+                            style="color: #c471f5 !important; border-color: #c471f5; " required />
+                        <div class="invalid-feedback" style="color: red;">
+                            Please provide a email.
+                        </div>
+                    </div>
+
+                    <div data-mdb-input-init class="form-outline mb-4">
+                        <label class="form-label" for="form3Example3" style="color: #c471f5;">Enter username</label>
+                        <input type="username" id="form3Example3" class="form-control form-control-lg"
+                            placeholder="Enter a valid username" name="username"
+                            style="color: #c471f5 !important; border-color: #c471f5; " required />
+                        <div class="invalid-feedback" style="color: red;">
+                            Please provide a username.
+                        </div>
+                    </div>
+
+
+
+                    <!-- Password input -->
+                    <div data-mdb-input-init class="form-outline mb-4">
+                        <label class="form-label" for="form3Example4" style="color: #c471f5;">Enter Password</label>
+                        <input type="password" id="form3Example4" class="form-control form-control-lg"
+                            placeholder="Enter password" name="password" style="color: #c471f5; border-color: #c471f5;"
+                            required />
+                        <div class="invalid-feedback" style="color: red;">
+                            Please provide a password.
+                        </div>
+                    </div>
+
+                    <div class="text-center text-lg-start mt-4 pt-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <button type="submit" class="btn btn-lg"
+                                style="background-color: #c471f5; color: white; padding-left: 2.5rem; padding-right: 2.5rem;">
+                                Login
+                            </button>
+                            <a href="#" class="text-body" data-bs-toggle="modal" data-bs-target="#forgetPasswordModal"
+                                style="color: #c471f5;">Forgot password?</a>
+                        </div>
+                        <p class="small fw-bold mt-2 pt-1 mb-0" style="color: #c471f5;">Don't have an account? <a
+                                href="/user/signup" class="link-danger" style="color: #c471f5;">Register</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Forget Password Modal -->
+        <div class="modal fade" id="forgetPasswordModal" tabindex="-1" aria-labelledby="forgetPasswordModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="/user/forgetPassword" method="POST" class="needs-validation" novalidate>
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="forgetPasswordModalLabel" style="color: #c471f5;"><i
+                                    class="bi bi-shield-lock-fill"></i> Forget Password</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Email input -->
+                            <div class="mb-3">
+                                <label for="email" class="form-label" style="color: #c471f5;"><i
+                                        class="bi bi-envelope-fill"></i> Email</label>
+                                <input type="email" class="form-control" id="email" name="email"
+                                    style="color: #c471f5; border-color: #c471f5;" required>
+                                <div class="invalid-feedback" style="color: #c471f5;">
+                                    Please provide a valid email.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary"
+                                style="background-color: #c471f5; border-color: #c471f5;">Send Reset Link</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </body>

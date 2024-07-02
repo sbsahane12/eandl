@@ -1,0 +1,108 @@
+<% layout('layouts/adminboilerplate') %>
+<body>
+    <div class="row d-flex justify-content-center align-items-center">
+
+        <div class="col-md-8 col-xl-10  offset-xl-0">
+            <h2 style="color: #c471f5;" class="text-center"><b>Edit Eearn And Learn Student : <%= user.name %></b></h2>
+<hr>
+        </div>
+        
+        <div class="col-md-8 col-lg-6 col-xl-5 offset-xl-1">
+
+            <form action="/admin/updateUser/<%= user._id %>" method="POST" class="needs-validation" novalidate>
+                <!-- Name -->
+                <div data-mdb-input-init class="form-outline mb-1">
+                    <label class="form-label" for="name" style="color: #c471f5;">Name</label>
+                    <input type="text" id="name" class="form-control " name="name" value="<%= user.name %>" required style="color: #c471f5; border-color: #c471f5;">
+                    <div class="invalid-feedback" style="color: red;">
+                        Please enter the name.
+                    </div>
+                </div>
+
+                <!-- Account Number -->
+                <div data-mdb-input-init class="form-outline mb-1">
+                    <label class="form-label" for="accountNumber" style="color: #c471f5;">Account Number</label>
+                    <input type="text" id="accountNumber" class="form-control " name="accountNumber" value="<%= user.accountNumber %>" required maxlength="14" style="color: #c471f5; border-color: #c471f5;">
+                    <div class="invalid-feedback" style="color: red;">
+                        Please enter the account number.
+                    </div>
+                </div>
+
+                <!-- Username -->
+                <div data-mdb-input-init class="form-outline mb-1">
+                    <label class="form-label" for="username" style="color: #c471f5;">Username</label>
+                    <input type="text" id="username" class="form-control " name="username" value="<%= user.username %>" required style="color: #c471f5; border-color: #c471f5;">
+                    <div class="invalid-feedback" style="color: red;">
+                        Please enter the username.
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div data-mdb-input-init class="form-outline mb-1">
+                    <label class="form-label" for="email" style="color: #c471f5;">Email</label>
+                    <input type="email" id="email" class="form-control " name="email" value="<%= user.email %>" required style="color: #c471f5; border-color: #c471f5;">
+                    <div class="invalid-feedback" style="color: red;">
+                        Please enter a valid email address.
+                    </div>
+                </div>
+
+                <!-- Mobile -->
+                <div data-mdb-input-init class="form-outline mb-1">
+                    <label class="form-label" for="mobile" style="color: #c471f5;">Mobile</label>
+                    <input type="text" id="mobile" class="form-control " name="mobile" value="<%= user.mobile %>" required style="color: #c471f5; border-color: #c471f5;">
+                    <div class="invalid-feedback" style="color: red;">
+                        Please enter the mobile number.
+                    </div>
+                </div>
+
+                <!-- Role -->
+                <div class="form-outline mb-1">
+                    <label class="form-label" for="role" style="color: #c471f5;">Role</label>
+                    <select id="role" name="role" class="form-control " style="color: #c471f5; border-color: #c471f5;">
+                        <option value="user" <%= user.role === 'user' ? 'selected' : '' %>>User</option>
+                        <option value="admin" <%= user.role === 'admin' ? 'selected' : '' %>>Admin</option>
+                    </select>
+                </div>
+
+                <!-- Verified -->
+ <!-- Verified -->
+ <div class="form-outline mb-1">
+    <label for="is_verified" class="form-label" style="color: #c471f5;">Verified:</label>
+    <select id="is_verified" name="is_verified" class="form-control" required style="color: #c471f5; border-color: #c471f5;">
+        <option value="true">True</option>
+        <option value="false">False</option>
+    </select>
+    <div class="invalid-feedback" style="color: red;">
+        Please select a Verified or not.
+    </div>
+</div>
+
+                <!-- Start Year -->
+                <div data-mdb-input-init class="form-outline mb-1">
+                    <label class="form-label" for="startYear" style="color: #c471f5;">Start Year</label>
+                    <input type="number" id="startYear" class="form-control " name="startYear" value="<%= Math.min(...user.yearPeriod) %>" required style="color: #c471f5; border-color: #c471f5;">
+                    <div class="invalid-feedback" style="color: red;">
+                        Please enter the start year.
+                    </div>
+                </div>
+
+                <!-- End Year -->
+                <div data-mdb-input-init class="form-outline mb-1">
+                    <label class="form-label" for="endYear" style="color: #c471f5;">End Year</label>
+                    <input type="number" id="endYear" class="form-control " name="endYear" value="<%= Math.max(...user.yearPeriod) %>" required style="color: #c471f5; border-color: #c471f5;">
+                    <div class="invalid-feedback" style="color: red;">
+                        Please enter the end year.
+                    </div>
+                </div>
+
+                
+
+                <!-- Submit Button -->
+                <div class="text-center text-lg-start mt-4 pt-2">
+                    <button type="submit" class="btn  " style="background-color: #c471f5; color: white; padding-left: 2.5rem; padding-right: 2.5rem;">Update User</button>
+                    <a href="/admin/manageUsers" class="btn" style="background-color: #c471f5; color: white;">Back to Manage Users</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>

@@ -1,0 +1,70 @@
+
+
+<% layout('layouts/adminboilerplate') %>
+
+    <body>
+        <div class="row d-flex justify-content-center align-items-center offset-xl-1 col-xl-10">
+            <h2 style="color: #c471f5;" class="text-center"><b>Earn And Learn Students Schemes </b></h2>
+            <hr>
+            <div class="input-group">
+                
+                <input type="text" id="searchInput" onkeyup="searchYears()" class="form-control col-lg-6 col-md-8 col-sm-10" placeholder="Search for years..." style="color: #c471f5; border-color: #c471f5;">
+            </div>
+            
+            <hr class="my-2" >
+            
+            <div class="row">
+                <div class="col-md-6" id="firstHalf">
+                    <% for(let i=0; i < Math.ceil(years.length / 2); i++) { %>
+                        <ul class="list-group list-group-horizontal rounded-0 bg-transparent">
+                            <li class="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent"
+                                style="border-color: #c471f5;">
+                                <p class="lead fw-normal me-2" style="color: #c471f5; ">
+                                    <a class="badge me-2" href="/admin/schemes/earn-learn-student/<%= years[i] %>"
+                                        style="background-color: #c471f5; text-decoration: none;"><%=i+1%> :  Schemes In Year
+                                        <%= years[i] %></a>
+                                </p>
+                            </li>
+                        </ul>
+                        <% } %>
+                </div>
+
+                <div class="col-md-6" id="secondHalf">
+                    <% for(let i=Math.ceil(years.length / 2); i < years.length; i++) { %>
+                        <ul class="list-group list-group-horizontal rounded-0 bg-transparent">
+                            <li class="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent"
+                                style="border-color: #c471f5;">
+                                <p class="lead fw-normal me-2" style="color: #c471f5;">
+                                    <a class="badge me-2" href="/admin/schemes/earn-learn-student/<%= years[i] %>"
+                                        style="background-color: #c471f5; text-decoration: none;"><%=i+1%> :Schemes In Year
+                                        <%= years[i] %></a>
+                                </p>
+                            </li>
+                        </ul>
+                        <% } %>
+                </div>
+            </div>
+
+            <hr>
+            <div class="text-center mt-4">
+                <a href="/admin/profile" class="btn" style="background-color: #c471f5;">Back to Profile</a>
+            </div>
+        </div>
+
+
+        <script>
+            function searchYears() {
+                const searchInput = document.getElementById('searchInput').value.toLowerCase();
+                const items = document.querySelectorAll('.list-group-item');
+
+                items.forEach(item => {
+                    const yearText = item.querySelector('a').textContent.toLowerCase();
+                    if (yearText.includes(searchInput)) {
+                        item.closest('.list-group-horizontal').style.display = 'block';
+                    } else {
+                        item.closest('.list-group-horizontal').style.display = 'none';
+                    }
+                });
+            }
+        </script>
+    </body>

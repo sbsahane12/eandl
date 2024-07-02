@@ -1,0 +1,65 @@
+<% layout('layouts/adminboilerplate') %>
+<body>
+    <div class="container mt-2">
+        <h1 class="text-center mb-1" style="color: #c471f5;">Edit Scheme</h1>
+        <hr>
+        <form action="/admin/schemes/earn-learn-student/<%= year %>/schemes/<%= scheme._id %>/update?_method=PUT" method="POST" class="col-lg-6 col-md-8 col-sm-10 mx-auto  rounded p-4 needs-validation" novalidate style="border-color: #c471f5;">
+            <!-- Scheme Name -->
+            <div class="form-outline mb-1">
+                <label for="schemeName" class="form-label" style="color: #c471f5;">Scheme Name:</label>
+                <input type="text" class="form-control" id="schemeName" name="schemeName" value="<%= scheme.schemeName %>" required style="color: #c471f5; border-color: #c471f5;">
+                <div class="invalid-feedback" style="color: red;">
+                    Please enter the scheme name.
+                </div>
+            </div>
+
+            <!-- Scheme Type -->
+            <div class="form-outline mb-1">
+                <label for="schemeType" class="form-label" style="color: #c471f5;">Scheme Type:</label>
+                <select id="schemeType" name="schemeType" class="form-control" required style="color: #c471f5; border-color: #c471f5;">
+                    <option value="ground" <%= scheme.schemeType === 'ground' ? 'selected' : '' %>>Ground</option>
+                    <option value="department" <%= scheme.schemeType === 'department' ? 'selected' : '' %>>Department</option>
+                </select>
+                <div class="invalid-feedback" style="color: red;">
+                    Please select a scheme type.
+                </div>
+            </div>
+
+            <!-- Hours Worked -->
+            <div class="form-outline mb-1">
+                <label for="hoursWorked" class="form-label" style="color: #c471f5;">Hours Worked:</label>
+                <input type="number" class="form-control" id="hoursWorked" name="hoursWorked" value="<%= scheme.hoursWorked %>" required style="color: #c471f5; border-color: #c471f5;">
+                <div class="invalid-feedback" style="color: red;">
+                    Please enter the hours worked.
+                </div>
+            </div>
+
+            <!-- Date -->
+            <div class="form-outline mb-1">
+                <label for="date" class="form-label" style="color: #c471f5;">Date:</label>
+                <input type="date" class="form-control" id="date" name="date" value="<%= new Date(scheme.date).toISOString().substring(0, 10) %>" required style="color: #c471f5; border-color: #c471f5;">
+                <div class="invalid-feedback" style="color: red;">
+                    Please enter the date.
+                </div>
+            </div>
+
+            <!-- Completed -->
+            <div class="form-outline mb-1">
+                <label for="completed" class="form-label" style="color: #c471f5;">Completed:</label>
+                <select id="completed" name="completed" class="form-control" required style="color: #c471f5; border-color: #c471f5;">
+                    <option value="true">True</option>
+                    <option value="false">False</option>
+                </select>
+                <div class="invalid-feedback" style="color: red;">
+                    Please select a Completed or not.
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="text-center text-lg-start mt-4 pt-2">
+                <button type="submit" class="btn" style="background-color: #c471f5; color: white; padding-left: 2.5rem; padding-right: 2.5rem;">Save Changes</button>
+                <a href="/admin/schemes/earn-learn-student/<%= year %>" class="btn" style="background-color: #c471f5; color: white;">Back to Schemes</a>
+            </div>
+        </form>
+    </div>
+</body>

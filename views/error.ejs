@@ -1,0 +1,33 @@
+<% layout('layouts/userboilerplate') %>
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+    .error-container {
+        margin-top: 10%;
+        padding: 40px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+    }
+    .btn-custom {
+        background-color: #c471f5;
+        border-color: #c471f5;
+    }
+    .btn-custom:hover {
+        background-color: #a854d4;
+        border-color: #a854d4;
+    }
+</style>
+
+<div class="container text-center">
+    <div class="error-container">
+        <h1 class="display-4 text-danger">Error</h1>
+        <p class="lead"><%= error %></p>
+        <% if (typeof error1 !== 'undefined') { %>
+          <p class="lead"><%= error1 %></p>
+        <% } %>
+        <a href="/user/login" class="btn btn-custom">Go to Home</a>
+    </div>
+</div>

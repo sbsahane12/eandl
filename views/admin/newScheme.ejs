@@ -1,0 +1,126 @@
+<% layout('layouts/adminboilerplate') %>
+<body>
+    <div class="container mt-2">
+        <h1 class="text-center mb-1" style="color: #c471f5;">Create New Scheme</h1>
+        <hr>
+        <form action="/admin/schemes/earn-learn-student/new" method="POST" class="col-lg-6 col-md-8 col-sm-10 mx-auto rounded p-4 needs-validation" novalidate style="border-color: #c471f5;">
+            <!-- Scheme Name -->
+            <div class="form-outline mb-1">
+                <label for="schemeName" class="form-label" style="color: #c471f5;">Scheme Name:</label>
+                <input type="text" class="form-control" id="schemeName" name="schemeName" required style="color: #c471f5; border-color: #c471f5;">
+                <div class="invalid-feedback" style="color: red;">
+                    Please enter the scheme name.
+                </div>
+            </div>
+
+            <!-- Scheme Type -->
+            <div class="form-outline mb-1">
+                <label for="schemeType" class="form-label" style="color: #c471f5;">Scheme Type:</label>
+                <select id="schemeType" name="schemeType" class="form-control" required style="color: #c471f5; border-color: #c471f5;">
+                    <option value="ground">Ground</option>
+                    <option value="department">Department</option>
+                </select>
+                <div class="invalid-feedback" style="color: red;">
+                    Please select a scheme type.
+                </div>
+            </div>
+
+            <!-- Hours Worked -->
+            <div class="form-outline mb-1">
+                <label for="hoursWorked" class="form-label" style="color: #c471f5;">Hours Worked:</label>
+                <input type="number" class="form-control" id="hoursWorked" name="hoursWorked" required style="color: #c471f5; border-color: #c471f5;">
+                <div class="invalid-feedback" style="color: red;">
+                    Please enter the hours worked.
+                </div>
+            </div>
+
+            <!-- Date -->
+            <div class="form-outline mb-1">
+                <label for="date" class="form-label" style="color: #c471f5;">Date:</label>
+                <input type="date" class="form-control" id="date" name="date" required style="color: #c471f5; border-color: #c471f5;">
+                <div class="invalid-feedback" style="color: red;">
+                    Please enter a valid date.
+                </div>
+            </div>
+
+            <!-- Year Selection -->
+            <div class="form-outline mb-1">
+                <label for="year" class="form-label" style="color: #c471f5;">Year:</label>
+                <select id="year" name="year" class="form-control" required style="color: #c471f5; border-color: #c471f5;" onchange="showUsersByYear()">
+                    <% years.forEach(year => { %>
+                        <option value="<%= year %>"><%= year %></option>
+                    <% }); %>
+                </select>
+            </div>
+
+            <!-- Hidden div to store user data in JSON format -->
+            <div id="userData" data-users='<%= JSON.stringify(usersByYear) %>' style="display: none;"></div>
+
+            <!-- Users Selection -->
+            <div id="usersContainer">
+                <label class="form-label" style="color: #c471f5;">Users:</label><br>
+                <div class="list-group">
+                    <% usersByYear[years[0]].forEach(user => { %>
+                        <div class="list-group-item mb-2 mt-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="<%= user._id %>" name="selectedUsers" value="<%= user._id %>">
+                                <label class="form-check-label" for="<%= user._id %>">
+                                    <%= user.username %>
+                                </label>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
+
+             <!-- Verified -->
+ <div class="form-outline mb-1">
+    <label for="completed" class="form-label" style="color: #c471f5;">Completed:</label>
+    <select id="completed" name="completed" class="form-control" required style="color: #c471f5; border-color: #c471f5;">
+        <option value="true">True</option>
+        <option value="false">False</option>
+    </select>
+    <div class="invalid-feedback" style="color: red;">
+        Please select a Verified or not.
+    </div>
+</div>
+
+
+            <!-- Submit Button -->
+            <div class="text-center text-lg-start mt-4 pt-2">
+                <button type="submit" class="btn" style="background-color: #c471f5; color: white; padding-left: 2.5rem; padding-right: 2.5rem;">Create Scheme</button>
+                <a href="/admin/schemes" class="btn" style="background-color: #c471f5; color: white;">Back to Schemes</a>
+            </div>
+        </form>
+
+        <!-- Back Link -->
+        
+    </div>
+
+    <!-- JavaScript to handle dynamic user selection -->
+    <script>
+        function showUsersByYear() {
+            const selectedYear = document.getElementById('year').value;
+            const usersByYear = JSON.parse(document.getElementById('userData').getAttribute('data-users'));
+            const users = usersByYear[selectedYear] || [];
+            const usersContainer = document.getElementById('usersContainer');
+            usersContainer.innerHTML = '';
+
+            users.forEach(user => {
+                const checkbox = `
+                    <div class="list-group-item mb-2 mt-2">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="${user._id}" name="selectedUsers" value="${user._id}">
+                            <label class="form-check-label" for="${user._id}">
+                                ${user.username}
+                            </label>
+                        </div>
+                    </div>`;
+                usersContainer.insertAdjacentHTML('beforeend', checkbox);
+            });
+        }
+
+        // Initial load of users based on the default selected year
+        document.addEventListener('DOMContentLoaded', showUsersByYear);
+    </script>
+</body>

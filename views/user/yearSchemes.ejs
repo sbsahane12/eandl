@@ -1,0 +1,87 @@
+<% layout('layouts/userboilerplate') %>
+<body>
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col">
+                <div class="card" id="list1">
+                    <div class="card-body py-4 px-4 px-md-5">
+
+                            <div class="input-group" >
+                                <h1 class="text-center" style="color: #c471f5;">SCHEMS IN <%= year %> </h1>
+                                <input type="text " class="form-control form-control-lg rounded ms-2" id="searchInput" placeholder="Search schemes..." style="color: #c471f5; border-color: #c471f5;">
+                            </div>
+                        </p>
+
+                       
+
+                        <hr class="my-4">
+
+                        <div class="row">
+                            <div class="col-md-6" id="firstHalf">
+                                <% for(let i = 0; i < 6; i++) { %>
+                                    <ul class="list-group list-group-horizontal rounded-0 bg-transparent">
+                                        <li class="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent" style="border-color: #c471f5;">
+                                            <p class="lead fw-normal mb-0" style="color: #c471f5;">
+                                                <span class="badge me-2" style="background-color: #c471f5;"><%= i + 1 %></span>
+                                                <a href="/user/schemes/<%= year %>/<%= i %>" class="text-decoration-none text-dark" style="color: #c471f5;"><strong><%= new Date(2024, i, 1).toLocaleString('default', { month: 'long' }) %></strong></a>
+                                            </p>
+                                        </li>
+                                    </ul>
+                                <% } %>
+                            </div>
+
+                            <div class="col-md-6" id="secondHalf">
+                                <% for(let i = 6; i < 12; i++) { %>
+                                    <ul class="list-group list-group-horizontal rounded-0 bg-transparent">
+                                        <li class="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent" style="border-color: #c471f5;">
+                                            <p class="lead fw-normal mb-0" style="color: #c471f5;">
+                                                <span class="badge me-2" style="background-color: #c471f5;"><%= i + 1 %></span>
+                                                <a href="/user/schemes/<%= year %>/<%= i %>" class="text-decoration-none text-dark" style="color: #c471f5;"><strong><%= new Date(2024, i, 1).toLocaleString('default', { month: 'long' }) %></strong></a>
+                                            </p>
+                                        </li>
+                                    </ul>
+                                <% } %>
+                            </div>
+
+                         
+                        </div>
+
+                        <hr> 
+                        <div class="text-center mt-4">
+                            <a href="/user/profile" class="btn " style="background-color: #c471f5;">Back to Profile</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+ 
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const firstHalf = document.getElementById('firstHalf').querySelectorAll('.list-group-item');
+            const secondHalf = document.getElementById('secondHalf').querySelectorAll('.list-group-item');
+
+            searchInput.addEventListener('input', function() {
+                const searchTerm = searchInput.value.trim().toLowerCase();
+
+                filterMonths(firstHalf, searchTerm);
+                filterMonths(secondHalf, searchTerm);
+            });
+
+            function filterMonths(months, term) {
+                months.forEach(function(item) {
+                    const monthName = item.querySelector('strong').textContent.toLowerCase();
+                    const listItem = item.closest('.list-group-horizontal');
+
+                    if (monthName.includes(term)) {
+                        listItem.style.display = 'block';
+                    } else {
+                        listItem.style.display = 'none';
+                    }
+                });
+            }
+        });
+    </script>
+</body>

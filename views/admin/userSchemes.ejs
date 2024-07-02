@@ -1,0 +1,138 @@
+<% layout('layouts/adminboilerplate') %>
+<body style="background-color: #f8f9fa;">
+    <div class="container mt-5">
+        <h1 class="text-center" style="color: #c471f5;" >SCHEMS FOR <%= user.username.toUpperCase() %> IN <%= year %></h1>
+        <hr>
+        <% if (schemesByMonth.length === 0) { %>
+            <p class="text-center">No schemes found for <%= user.username %> in <%= year %>.</p>
+        <% } else { %>
+            <% schemesByMonth.forEach(month => { %>
+                <div class="mt-4">
+                   
+                    <div class="dropdown mb-3 text-center">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton<%= month.monthName %>" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: #c471f5; border-color: #c471f5; color: white; width: 100%; height: 40px; font-size: 16px;">
+                            <%= month.monthName %> <%= year %>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton<%= month.monthName %>">
+                            <li><a class="dropdown-item" href="#" onclick="toggleScheme('<%= month.monthName %>', 'ground')" style="color: #c471f5;">Ground Schemes</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="toggleScheme('<%= month.monthName %>', 'department')" style="color: #c471f5;">Department Schemes</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="toggleScheme('<%= month.monthName %>', 'download')" style="color: #c471f5;">Download</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Ground Schemes Section -->
+                    <div class="ground-schemes-<%= month.monthName %> d-none">
+                        <% if (month.schemes.filter(scheme => scheme.schemeType === 'ground').length === 0) { %>
+                            <p class="text-center" style="color: #c471f5;">No Ground Schemes found.</p>
+                        <% } else { %>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Scheme Name</th>
+                                        <th>Hours Worked</th>
+                                        <th>Date</th>
+                                        <th>Completed</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% month.schemes.filter(scheme => scheme.schemeType === 'ground').forEach(scheme => { %>
+                                        <tr>
+                                            <td><%= scheme.schemeName %></td>
+                                            <td><%= scheme.hoursWorked %></td>
+                                            <td><%= scheme.date.toDateString() %></td>
+                                            <td><%= scheme.completed ? 'Yes' : 'No' %></td>
+                                            <td>
+                                                <a href="/admin/schemes/earn-learn-student/<%= year %>/schemes/<%= scheme._id %>/edit" class="btn btn-sm btn-primary" style="background-color: #c471f5;">Edit</a>
+                                                <form action="/admin/schemes/earn-learn-student/<%= year %>/schemes/<%= scheme._id %>/delete?_method=DELETE" method="POST" class="d-inline">
+                                                    <button type="submit" class="btn btn-sm btn-danger" style="background-color: #c471f5;">Delete Scheme</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    <% }) %>
+                                </tbody>
+                            </table>
+                        <% } %>
+                    </div>
+
+                    <!-- Department Schemes Section -->
+                    <div class="department-schemes-<%= month.monthName %> d-none">
+                        <% if (month.schemes.filter(scheme => scheme.schemeType === 'department').length === 0) { %>
+                            <p class="text-center" style="color: #c471f5;">No Department Schemes found In <%= month.monthName %> <%= year %></p>
+                        <% } else { %>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Scheme Name</th>
+                                        <th>Hours Worked</th>
+                                        <th>Date</th>
+                                        <th>Completed</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% month.schemes.filter(scheme => scheme.schemeType === 'department').forEach(scheme => { %>
+                                        <tr>
+                                            <td><%= scheme.schemeName %></td>
+                                            <td><%= scheme.hoursWorked %></td>
+                                            <td><%= scheme.date.toDateString() %></td>
+                                            <td><%= scheme.completed ? 'Yes' : 'No' %></td>
+                                            <td>
+                                                <a href="/admin/schemes/earn-learn-student/<%= year %>/schemes/<%= scheme._id %>/edit" class="btn btn-sm btn-primary" style="background-color: #c471f5;">Edit</a>
+                                                <form action="/admin/schemes/earn-learn-student/<%= year %>/schemes/<%= scheme._id %>/delete?_method=DELETE" method="POST" class="d-inline">
+                                                    <button type="submit" class="btn btn-sm btn-danger" style="background-color: #c471f5;">Delete Scheme</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    <% }) %>
+                                </tbody>
+                            </table>
+                        <% } %>
+                    </div>
+
+                    <!-- Download Options Section -->
+                    <div class="download-schemes-<%= month.monthName %> d-none">
+                        <div class="d-flex justify-content-between">
+                            <a href="/admin/schemes/earn-learn-student/<%= user._id %>/<%= year %>/schemes/download-ground-excel/<%= getMonthNumber(month.monthName) %>" class="btn btn-sm btn-success" style="background-color: #c471f5;">Ground Excel <%= month.monthName %> <%= year %></a>
+                            <a href="/admin/schemes/earn-learn-student/<%= user._id %>/<%= year %>/schemes/download-department-excel/<%= getMonthNumber(month.monthName) %>" class="btn btn-sm btn-success" style="background-color: #c471f5;">Department Excel <%= month.monthName %> <%= year %></a>
+                            <a href="/admin/schemes/earn-learn-student/<%= user._id %>/<%= year %>/schemes/download-ground-word/<%= getMonthNumber(month.monthName) %>" class="btn btn-sm btn-success" style="background-color: #c471f5;">Ground Word <%= month.monthName %> <%= year %></a>
+                            <a href="/admin/schemes/earn-learn-student/<%= user._id %>/<%= year %>/schemes/download-department-word/<%= getMonthNumber(month.monthName) %>" class="btn btn-sm btn-success" style="background-color: #c471f5;">Department Word <%= month.monthName %> <%= year %></a>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        <% } %>
+        <a href="/admin/schemes/earn-learn-student/<%= year %>" class="btn btn-primary mt-4" style="background-color: #c471f5;">Back to <%= year %></a>
+    </div>
+
+    <script>
+        function toggleScheme(month, type) {
+            document.querySelector(`.ground-schemes-${month}`).classList.add('d-none');
+            document.querySelector(`.department-schemes-${month}`).classList.add('d-none');
+            document.querySelector(`.download-schemes-${month}`).classList.add('d-none');
+
+            if (type === 'ground') {
+                document.querySelector(`.ground-schemes-${month}`).classList.remove('d-none');
+            } else if (type === 'department') {
+                document.querySelector(`.department-schemes-${month}`).classList.remove('d-none');
+            } else if (type === 'download') {
+                document.querySelector(`.download-schemes-${month}`).classList.remove('d-none');
+            }
+        }
+    </script>
+</body>
+<style>
+    .form-control-sm {
+        max-width: 300px;
+    }
+    .table-responsive {
+        overflow-x: auto;
+    }
+table, thead,td,th{
+background-color: #f8f9fa;
+color: #c471f5;
+text-align: center;
+border: 2px solid #c471f5;
+}
+</style>
+

@@ -1,0 +1,44 @@
+
+    <nav class="navbar navbar-expand-lg navbar-custom sticky-top" style="background-color: #c471f5;">
+        <div class="container-fluid">
+            <!-- <a  href="/public/image/eearn-and-learn-high-resolution-logo-black-transparent.png">Admin Panel</a> -->
+            <img class="navbar-brand" src="/image/logo.png" alt="not found" style="width: 150px; height: 50px">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fa-solid fa-bars" style="color: white;"></i>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/admin/profile">Dashboard</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Students
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: #c471f5;">
+                            <li><a class="dropdown-item"  style="background-color:#c471f5;" href="/admin/manageUsers">Manage Students</a></li>
+                            <li><a class="dropdown-item"  style="background-color:#c471f5;" href="/admin/createUser">Create New Student</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Students Schemes
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: #c471f5;">
+                            <li><a class="dropdown-item"  style="background-color:#c471f5;" href="/admin/schemes">Manage Schemes</a></li>
+                            <li><a class="dropdown-item" style="background-color: #c471f5;" href="/admin/schemes/earn-learn-student/new">Create New Scheme</a></li>
+                            
+                        </ul>
+                    </li>
+                    <%if (currentUser) { %>
+                </ul>
+                <a href="/user/logout" class="btn btn-danger" >Logout</a>
+                <%} %>
+            </div>
+        </div>
+    </nav>
+

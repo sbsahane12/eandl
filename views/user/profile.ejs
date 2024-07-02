@@ -1,0 +1,147 @@
+
+
+<% layout('layouts/userboilerplate') %>
+<body>
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col">
+                <div class="card" id="list1">
+                    <div class=" py-4 px-4 px-md-5 text-center">
+                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
+                                class="rounded-circle img-fluid" style="width: 100px;" />
+                    
+                        </p>
+
+                   
+                          
+                              
+                         
+                      <b> <h2 style="color: #c471f5;" class="text-center"> User Profile </h2></b> 
+                      <hr class="mt-1">
+
+                        <div class="row">
+                            
+                            <div class="col-md-6" id="firstHalf">
+                             
+
+                                <ul class="list-group list-group-horizontal rounded-0 bg-transparent">
+                                    <li class="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent" style="border-color: #c471f5;">
+                                        <p class="lead fw-normal mb-0" style="color: #c471f5;">
+                                            <span class="badge me-2" style="background-color: #c471f5;  "> Username</span>
+                                            <div  class="text-decoration-none text-dark" style="color: #c471f5;"><%= user.username %></div>
+                                        </p>
+                                    </li>
+                                </ul>
+                                
+                                <ul class="list-group list-group-horizontal rounded-0 bg-transparent">
+                                    <li class="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent" style="border-color: #c471f5;">
+                                        <p class="lead fw-normal mb-0" style="color: #c471f5;">
+                                            <span class="badge me-2" style="background-color: #c471f5;  "> Email</span>
+                                            <div  class="text-decoration-none text-dark" style="color: #c471f5;"><%= user.email %></div>
+                                        </p>
+                                    </li>
+                                </ul>
+
+                                
+                                <ul class="list-group list-group-horizontal rounded-0 bg-transparent">
+                                    <li class="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent" style="border-color: #c471f5;">
+                                        <p class="lead fw-normal mb-0" style="color: #c471f5;">
+                                            <span class="badge me-2" style="background-color: #c471f5;  "> Name</span>
+                                            <div  class="text-decoration-none text-dark" style="color: #c471f5;"><%= user.name %></div>
+                                        </p>
+                                    </li>
+                                </ul>
+                            </div>
+
+
+                            <div class="col-md-6" id="secondHalf">
+                        
+                                <ul class="list-group list-group-horizontal rounded-0 bg-transparent">
+                                    <li class="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent" style="border-color: #c471f5;">
+                                        <p class="lead fw-normal mb-0" style="color: #c471f5;">
+                                            <span class="badge me-2" style="background-color: #c471f5;  "> Account Number</span>
+                                            <div  class="text-decoration-none text-dark" style="color: #c471f5;"><%= user.accountNumber %></div>
+                                        </p>
+                                    </li>
+                                </ul>
+                                
+                                <ul class="list-group list-group-horizontal rounded-0 bg-transparent">
+                                    <li class="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent" style="border-color: #c471f5;">
+                                        <p class="lead fw-normal mb-0" style="color: #c471f5;">
+                                            <span class="badge me-2" style="background-color: #c471f5;  "> Email verified </span>
+                                            <div  class="text-decoration-none text-dark" style="color: #c471f5;"><%= user.is_verified %></div>
+                                        </p>
+                                    </li>
+                                </ul>
+
+                                
+                                <ul class="list-group list-group-horizontal rounded-0 bg-transparent">
+                                    <li class="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent" style="border-color: #c471f5;">
+                                        <p class="lead fw-normal mb-0" style="color: #c471f5;">
+                                            <span class="badge me-2" style="background-color: #c471f5;  "> Mobile Number</span>
+                                       
+                                                <div  class="text-decoration-none text-dark" style="color: #c471f5;"><%=user.mobile%></div>
+
+                                            
+                                        </p>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <hr class="mt-1">
+
+                            <b> <h2 style="color: #c471f5;" class="text-center"> User Admission Year </h2></b> 
+                            <hr>
+
+                            <%for( i = 0; i < user.yearPeriod.length; i++) { %>
+
+                                <ul class="list-group list-group-horizontal rounded-0 bg-transparent text-center">
+                                    <li class="list-group-item px-3 py-1 d-flex align-items-center flex-grow-1 border-0 bg-transparent" style="border-color: #c471f5;">
+                                        <p class="lead fw-normal mb-0 " style="color: #c471f5;">
+                                            <span class="badge me-2 text-center" style="background-color: #c471f5; ">Year : <%=user.yearPeriod[i]%></span>
+                                            <b><a href="/user/schemes/<%= user.yearPeriod[i] %>" class="text-decoration-none text-dark text-center" style="color: #c471f5;"><%= user.yearPeriod[i] %></a></b>
+                                        </p>
+                                    </li>
+                                </ul>
+                            <% } %>
+
+                        </div>
+
+                        <div class="text-center mt-2" >
+                           
+                            <button type="button" class="btn ms-2 mt-2" style="background-color: #c471f5;" data-bs-toggle="modal" data-bs-target="#forgetPasswordModal">
+                                <i class="bi bi-question-circle"></i>Change Password
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    <div class="modal fade" id="forgetPasswordModal" tabindex="-1" aria-labelledby="forgetPasswordModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="/user/forgetPassword" method="POST" class="needs-validation" novalidate>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="forgetPasswordModalLabel" style="color: #c471f5;"><i class="bi bi-shield-lock-fill"></i> Change Password</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Email input -->
+                        <div class="mb-3">
+                            <label for="email" class="form-label" style="color: #c471f5;"><i class="bi bi-envelope-fill"></i> Email</label>
+                            <input type="email" class="form-control" id="email" name="email" style="color: #c471f5; border-color: #c471f5;" required>
+                            <div class="invalid-feedback" style="color: #c471f5;">
+                                Please provide a valid email.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" style="background-color: #c471f5; border-color: #c471f5;">Send</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
