@@ -1310,7 +1310,7 @@ exports.downloadUsersDataWord = async (req, res) => {
         }
 
         if (rows.length === 0) {
-            return res.status(404).json({ error: `No user data found for the year ${year}` });
+            return req.flash("error",`Any User In This Year: ${year} Has Not Completed Any Schemes,So You Can Not Download Word File.`);
         }
 
         const doc = new Document({
@@ -1368,7 +1368,7 @@ exports.downloadUsersDataWord = async (req, res) => {
 
         res.download(filePath, (err) => {
             if (err) {
-                req.flash('error', 'Any User In This Year Has Not Completed Any Schemes,So You Can Not Download Excel File');
+                req.flash('error', 'Any User In This Year Has Not Completed Any Schemes,So You Can Not Download Word File');
                 res.redirect(`/admin/schemes/${year}`);
             } else {
                 fs.unlinkSync(filePath);
@@ -1423,7 +1423,7 @@ exports.downloadUsersDataExcel = async (req, res) => {
         }
 
         if (rows.length === 0) {
-            return res.status(404).json({ error: `No user data found for the year ${year}` });
+            return req.flash("error",`Any User In This Year: ${year} Has Not Completed Any Schemes,So You Can Not Download Excel File.`);
         }
 
         const downloadsDir = ensureDownloadDir();
