@@ -1,0 +1,102 @@
+body {
+    margin-bottom: 0; /* Set margin-bottom to zero */
+    font-family: 'Roboto', sans-serif;
+    background-color: #f8f9fa;
+}
+
+.footer {
+    position: relative; /* Change to relative to scroll with the page */
+    width: 100%;
+    background-color: #f8f9fa; /* Example background color */
+    padding-top: 20px; /* Add padding to separate footer content from the rest */
+    padding-bottom: 20px;
+}
+
+.divider:after,
+.divider:before {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #eee;
+}
+
+.h-custom {
+    height: calc(100% - 73px);
+}
+
+@media (max-width: 450px) {
+    .h-custom {
+        height: 100%;
+    }
+}
+
+.navbar-custom {
+    background-color: #c471f5;
+}
+
+.navbar-custom .navbar-brand,
+.navbar-custom .nav-link,
+.navbar-custom .dropdown-item {
+    color: white;
+}
+
+.navbar-custom .nav-link:hover,
+.navbar-custom .dropdown-item:hover {
+    color: #d5a6ff;
+}
+
+.navbar-custom .btn-outline-success {
+    color: white;
+    border-color: white;
+}
+
+.navbar-custom .btn-outline-success:hover {
+    color: #c471f5;
+    background-color: white;
+}
+
+.footer-custom {
+    background-color: #c471f5;
+    color: white;
+}
+
+.footer-custom h5,
+.footer-custom p,
+.footer-custom li {
+    color: white;
+}
+
+.footer-custom a {
+    color: white;
+    text-decoration: none;
+}
+
+.footer-custom a:hover {
+    color: #d5a6ff;
+}
+
+.footer-custom hr {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+@media (max-width: 768px) {
+    .footer-custom .col-md-4 {
+        text-align: left; /* Change to left alignment */
+        margin-bottom: 20px;
+    }
+
+    .footer-custom .col-md-4 h5 {
+        margin-bottom: 10px;
+    }
+}
+
+@media (max-width: 576px) {
+    .footer {
+        position: relative; /* Change to relative for small devices */
+        height: auto; /* Auto height for small devices */
+    }
+}
+
+::-webkit-scrollbar {
+    display: none; /* for Chrome, Safari, and Opera */
+}
