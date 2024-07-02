@@ -1268,6 +1268,203 @@ const getMonthlySchemes = async (userId, year) => {
 };
 
 
+// exports.downloadUsersDataWord = async (req, res) => {
+//     const { year } = req.params;
+
+//     try {
+//         const users = await User.find();
+//         const rows = [];
+
+//         for (const user of users) {
+//             const monthlySchemes = await getMonthlySchemes(user._id, year);
+//             const totalSchemes = monthlySchemes.reduce((acc, val) => acc + val, 0);
+
+//             // Only include users with schemes for the specified year
+//             if (totalSchemes > 0) {
+//                 const row = {
+//                     Username: user.username,
+//                     Name: user.name,
+//                     'Account Number': user.accountNumber,
+//                     Email: user.email,
+//                     Mobile: user.mobile,
+//                     Role: user.role,
+//                     Verified: user.verified ? 'Yes' : 'No',
+//                     'Jan Schemes': monthlySchemes[0],
+//                     'Feb Schemes': monthlySchemes[1],
+//                     'Mar Schemes': monthlySchemes[2],
+//                     'Apr Schemes': monthlySchemes[3],
+//                     'May Schemes': monthlySchemes[4],
+//                     'Jun Schemes': monthlySchemes[5],
+//                     'Jul Schemes': monthlySchemes[6],
+//                     'Aug Schemes': monthlySchemes[7],
+//                     'Sep Schemes': monthlySchemes[8],
+//                     'Oct Schemes': monthlySchemes[9],
+//                     'Nov Schemes': monthlySchemes[10],
+//                     'Dec Schemes': monthlySchemes[11],
+//                     'Total Schemes Completed': totalSchemes,
+//                     Action: ''
+//                 };
+
+//                 rows.push(row);
+//             }
+//         }
+
+//         if (rows.length === 0) {
+            
+//             req.flash('error', 'Any User In This Year Has Not Completed Any Schemes,So You Can Not Download Excel File.');
+//             throw new ExpressError('Any User In This Year Has Not Completed Any Schemes,So You Can Not Download Excel File.', 400);
+//         }
+
+//         const doc = new Document({
+//             sections: [{
+//                 properties: {
+//                     page: {
+//                         margin: {
+//                             top: convertInchesToTwip(0.5),
+//                             right: convertInchesToTwip(0.5),
+//                             bottom: convertInchesToTwip(0.5),
+//                             left: convertInchesToTwip(0.5)
+//                         }
+//                     }
+//                 },
+//                 children: [
+//                     new Paragraph({
+//                         text: `User Data for ${year}`,
+//                         heading: HeadingLevel.HEADING_1,
+//                         alignment: AlignmentType.CENTER,
+//                         spacing: {
+//                             before: 0,
+//                             after: 200
+//                         }
+//                     }),
+//                     new Table({
+//                         width: {
+//                             size: 100,
+//                             type: 'pct'
+//                         },
+//                         rows: [
+//                             new TableRow({
+//                                 children: Object.keys(rows[0]).map(header => new TableCell({ children: [new Paragraph(header)] })),
+//                                 height: {
+//                                     value: convertInchesToTwip(0.256),
+//                                     rule: 'exact'
+//                                 }
+//                             }),
+//                             ...rows.map(row => new TableRow({
+//                                 children: Object.values(row).map(value => new TableCell({ children: [new Paragraph(value.toString())] })),
+//                                 height: {
+//                                     value: convertInchesToTwip(0.256),
+//                                     rule: 'exact'
+//                                 }
+//                             }))
+//                         ]
+//                     })
+//                 ]
+//             }]
+//         });
+
+//         const buffer = await Packer.toBuffer(doc);
+//         const downloadsDir = ensureDownloadDir();
+//         const filePath = path.join(downloadsDir, `users_${year}.docx`);
+//         fs.writeFileSync(filePath, buffer);
+
+//         res.download(filePath, (err) => {
+//             if (err) {
+//                 req.flash('error', 'Any User In This Year Has Not Completed Any Schemes,So You Can Not Download Excel File.');
+//                 throw new ExpressError('Any User In This Year Has Not Completed Any Schemes,So You Can Not Download Excel File.', 400);
+//             } else {
+//                 fs.unlinkSync(filePath);
+//             }
+//         });
+
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).json({ error: 'Failed to export data' });
+//     }
+// };
+
+// exports.downloadUsersDataExcel = async (req, res) => {
+//     const { year } = req.params;
+
+//     try {
+//         const users = await User.find();
+//         const rows = [];
+
+//         for (const user of users) {
+//             const monthlySchemes = await getMonthlySchemes(user._id, year);
+//             const totalSchemes = monthlySchemes.reduce((acc, val) => acc + val, 0);
+
+//             // Only include users with schemes for the specified year
+//             if (totalSchemes > 0) {
+//                 const row = {
+//                     Username: user.username,
+//                     Name: user.name,
+//                     'Account Number': user.accountNumber,
+//                     Email: user.email,
+//                     Mobile: user.mobile,
+//                     Role: user.role,
+//                     Verified: user.verified ? 'Yes' : 'No',
+//                     'Jan Schemes': monthlySchemes[0],
+//                     'Feb Schemes': monthlySchemes[1],
+//                     'Mar Schemes': monthlySchemes[2],
+//                     'Apr Schemes': monthlySchemes[3],
+//                     'May Schemes': monthlySchemes[4],
+//                     'Jun Schemes': monthlySchemes[5],
+//                     'Jul Schemes': monthlySchemes[6],
+//                     'Aug Schemes': monthlySchemes[7],
+//                     'Sep Schemes': monthlySchemes[8],
+//                     'Oct Schemes': monthlySchemes[9],
+//                     'Nov Schemes': monthlySchemes[10],
+//                     'Dec Schemes': monthlySchemes[11],
+//                     'Total Schemes Completed': totalSchemes,
+//                     Action: ''
+//                 };
+
+//                 rows.push(row);
+//             }
+//         }
+
+//         if (rows.length === 0) {
+//             req.flash('error', 'Any User In This Year Has Not Completed Any Schemes,So You Can Not Download Excel File.');
+//             throw new ExpressError('Any User In This Year Has Not Completed Any Schemes,So You Can Not Download Excel File.', 400);
+             
+//         }
+
+//         const downloadsDir = ensureDownloadDir();
+//         const workbook = new ExcelJS.Workbook();
+//         const worksheet = workbook.addWorksheet(`Users_${year}`);
+        
+//         worksheet.columns = Object.keys(rows[0]).map(key => ({
+//             header: key, key, width: 20
+//         }));
+
+//         rows.forEach(row => {
+//             worksheet.addRow(row);
+//         });
+
+//         const excelFilePath = path.join(downloadsDir, `users_${year}.xlsx`);
+//         await workbook.xlsx.writeFile(excelFilePath);
+
+//         res.download(excelFilePath, (err) => {
+//             if (err) {
+//                 req.flash('error', 'Any User In This Year Has Not Completed Any Schemes,So You Can Not Download Excel File.');
+                
+//                 throw new ExpressError('Any User In This Year Has Not Completed Any Schemes,So You Can Not Download Excel File.', 400);
+
+//             } else {
+//                 fs.unlinkSync(excelFilePath);
+//             }
+//         });
+
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).json({ error: 'Failed to export data' });
+//     }
+// };
+
+
+
+
 exports.downloadUsersDataWord = async (req, res) => {
     const { year } = req.params;
 
@@ -1310,7 +1507,7 @@ exports.downloadUsersDataWord = async (req, res) => {
         }
 
         if (rows.length === 0) {
-            return req.flash("error",`Any User In This Year: ${year} Has Not Completed Any Schemes,So You Can Not Download Word File.`);
+            req.flash('error', '');
         }
 
         const doc = new Document({
@@ -1368,8 +1565,8 @@ exports.downloadUsersDataWord = async (req, res) => {
 
         res.download(filePath, (err) => {
             if (err) {
-                req.flash('error', 'Any User In This Year Has Not Completed Any Schemes,So You Can Not Download Word File');
-                res.redirect(`/admin/schemes/${year}`);
+                req.flash('error', 'Error downloading the Word file.');
+                res.redirect('/admin/manageUsers');
             } else {
                 fs.unlinkSync(filePath);
             }
@@ -1377,7 +1574,8 @@ exports.downloadUsersDataWord = async (req, res) => {
 
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'Failed to export data' });
+        req.flash('error', "Any user hasn't completed any schemes in this year.Sorry so you can't download it.");
+        res.redirect('/admin/manageUsers');
     }
 };
 
@@ -1423,7 +1621,7 @@ exports.downloadUsersDataExcel = async (req, res) => {
         }
 
         if (rows.length === 0) {
-            return req.flash("error",`Any User In This Year: ${year} Has Not Completed Any Schemes,So You Can Not Download Excel File.`);
+            req.flash('error', '');
         }
 
         const downloadsDir = ensureDownloadDir();
@@ -1443,8 +1641,8 @@ exports.downloadUsersDataExcel = async (req, res) => {
 
         res.download(excelFilePath, (err) => {
             if (err) {
-                req.flash('error', 'Any User In This Year Has Not Completed Any Schemes,So You Can Not Download Excel File');
-                res.redirect(`/admin/schemes/${year}`);
+                req.flash('error', 'Error downloading the Excel file.');
+                res.redirect('/admin/manageUsers');
             } else {
                 fs.unlinkSync(excelFilePath);
             }
@@ -1452,10 +1650,7 @@ exports.downloadUsersDataExcel = async (req, res) => {
 
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'Failed to export data' });
+        req.flash('error', "Any user hasn't completed any schemes in this year.Sorry so you can't download it.");
+        res.redirect('/admin/manageUsers');
     }
 };
-
-
-
-
