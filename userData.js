@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 const User = require('./models/User'); // Adjust the path as per your file structure
 const Scheme = require('./models/Scheme'); // Adjust the path as per your file structure
-
+require('dotenv').config();
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/earnandlearn').then(async () => {
+mongoose.connect(process.env.MONGODB_URI).then(async () => {
     console.log('MongoDB connected');
 
     try {
