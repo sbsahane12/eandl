@@ -9,8 +9,23 @@ body {
     width: 100%;
     background-color: #f8f9fa; /* Example background color */
     padding-top: 20px; /* Add padding to separate footer content from the rest */
-    padding-bottom: 20px;
+    padding-bottom: 40px;
+
 }
+
+
+@media screen and (min-width: 769px) {
+    .footer-custom .col-md-4 {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .footer-custom .col-md-4 h5 {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+}
+
 
 .divider:after,
 .divider:before {

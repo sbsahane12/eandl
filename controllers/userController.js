@@ -2,20 +2,18 @@ const User = require('../models/User');
 const Scheme = require('../models/Scheme');
 const UserForget = require('../models/UserForget');
 const passport = require('passport');
-const cloudinary = require('../utils/cloudinary');
 const randomstring = require('randomstring');
 const { sendVerificationEmail, sendPasswordResetEmail } = require('../utils/mailer');
-const {userSchema,schemeSchema, updateSchemeSchema,yearSchema,monthYearSchema, emailSchema, passwordResetSchema,UpdateuserSchema,userLoginSchema} = require('../validation/userValidation');
-// const { registerSchema, emailSchema, passwordResetSchema } = require('../validation/userValidation');
+const {userSchema,emailSchema, passwordResetSchema,userLoginSchema} = require('../validation/userValidation');
 const ExpressError = require('../utils/ExpressError');
-const fs = require('fs');
-const Excel = require('excel4node');
-const PDFDocument = require('pdfkit');
 exports.signupForm = (req, res) => {
     res.render('user/signup');
 };
 
 exports.signup = async (req, res) => {
+
+     console.log("Body of request",	req.body);
+
     try {
 
         const { error } = userSchema.validate(req.body);
@@ -26,21 +24,39 @@ exports.signup = async (req, res) => {
         }
         let { username, name, accountNumber, email, password, role, mobile, startYear, endYear } = req.body;
 
-        const existingUser = await User.findOne({ $or: [{ email }, { accountNumber }] });
+        
+        let existingUser = await User.findOne({ username });
         if (existingUser) {
-            throw new ExpressError('Email or Account Number already in use', 400);
+            throw new Error('A user with the given username is already registered');
         }
+
+       let userAlreadyExists = await User.findOne({ email });
+        if (userAlreadyExists) {
+            throw new Error('A user with the given email is already registered');
+        }
+
+        userAlreadyExists = await User.findOne({ accountNumber });
+        if (userAlreadyExists) {
+            throw new Error('A user with the given account number is already registered');
+        }
+
+        userAlreadyExists = await User.findOne({ mobile });
+        if (userAlreadyExists) {
+            throw new Error('A user with the given mobile number is already registered');
+        }
+        
+        userAlreadyExists = await User.findOne({ name });
+        if (userAlreadyExists) {
+            throw new Error('A user with the given name is already registered');
+        }
+
 
         let yearPeriod = [];
         for (let year = parseInt(startYear); year <= parseInt(endYear); year++) {
             yearPeriod.push(year);
         }
 
-        var result = null;
-        if (req.file) {
-            result = await cloudinary.uploader.upload(req.file.path);
-        }
-
+     
         const registeredUser = await User.register(new User({
             username,
             name,
@@ -48,7 +64,6 @@ exports.signup = async (req, res) => {
             email,
             role,
             mobile,
-            photo: result ? result.secure_url : null,
             yearPeriod
         }), password);
 

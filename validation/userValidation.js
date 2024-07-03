@@ -1,5 +1,6 @@
 const Joi = require('joi');
 
+
 const emailSchema = Joi.object({
     email: Joi.string().email().required()
         .messages({
@@ -25,15 +26,21 @@ const passwordResetSchema = Joi.object({
 
 const userSchema = Joi.object({
     username: Joi.string().min(3).max(30).required()
-        .messages({
-            'string.base': 'Username must be a text string',
-            'string.empty': 'Username is required',
-            'string.min': 'Username must be at least 3 characters long',
-            'string.max': 'Username cannot exceed 30 characters',
-            'string.alphanum': 'Username must only contain alphanumeric characters',
-            'any.required': 'Username is required'
-        }),
-    name: Joi.string().min(2).max(50).required()
+    .pattern(new RegExp('^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])'))
+    .messages({
+        'string.base': 'Username must be a text string',
+        'string.empty': 'Username is required',
+        'string.min': 'Username must be at least 3 characters long',
+        'string.max': 'Username cannot exceed 30 characters',
+        'string.pattern.base': 'Username must contain at least one uppercase letter, one number, and one special character',
+        'any.required': 'Username is required'
+    }),
+        name: Joi.string().min(2).max(50).required().custom((value, helpers) => {
+            if (value.split(' ').length < 3) {
+                return helpers.message('Enter Full Name with atleast 3 words');
+            }
+            return value;
+        })
         .messages({
             'string.base': 'Name must be a text string',
             'string.empty': 'Name is required',
@@ -41,9 +48,9 @@ const userSchema = Joi.object({
             'string.max': 'Name cannot exceed 50 characters',
             'any.required': 'Name is required'
         }),
-    accountNumber: Joi.string().pattern(/^[0-9]{10,12}$/).required()
+    accountNumber: Joi.string().pattern(/^[0-9]{14}$/).required()
         .messages({
-            'string.pattern.base': 'Account number must be 10-12 digits long',
+            'string.pattern.base': 'Account number must be 14 digits long',
             'string.empty': 'Account number is required',
             'any.required': 'Account number is required'
         }),
@@ -65,12 +72,14 @@ const userSchema = Joi.object({
             'string.empty': 'Role is required',
             'any.required': 'Role is required'
         }),
-    password: Joi.string().min(6).required()
+        password: Joi.string().min(8).required().pattern(new RegExp('^(?=.*[A-Z])(?=.*[!@#$%^&*])'))
         .messages({
-            'string.min': 'Password must be at least 6 characters long',
+            'string.min': 'Password must be at least 8 characters long',
             'string.empty': 'Password is required',
+            'string.pattern.base': 'Password must contain at least one uppercase letter and one special character',
             'any.required': 'Password is required'
         }),
+ 
     startYear: Joi.number().integer().min(1900).max(2100).required()
         .messages({
             'number.base': 'Start year must be a number',
@@ -91,10 +100,8 @@ const userSchema = Joi.object({
         .messages({
             'boolean.base': 'Verification status must be true or false'
         }),
-    photo: Joi.string().allow('')
-        .messages({
-            'string.base': 'Photo must be a string'
-        })
+
+
 });
 
 
@@ -121,15 +128,16 @@ const userLoginSchema = Joi.object({
             'any.required': 'Password is required'
         })
 });
-
 const UpdateuserSchema = Joi.object({
+    
     username: Joi.string().min(3).max(30).required()
+        .pattern(new RegExp('^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])'))
         .messages({
             'string.base': 'Username must be a text string',
             'string.empty': 'Username is required',
             'string.min': 'Username must be at least 3 characters long',
             'string.max': 'Username cannot exceed 30 characters',
-            'string.alphanum': 'Username must only contain alphanumeric characters',
+            'string.pattern.base': 'Username must contain at least one uppercase letter, one number, and one special character',
             'any.required': 'Username is required'
         }),
     name: Joi.string().min(2).max(50).required()
@@ -183,8 +191,10 @@ const UpdateuserSchema = Joi.object({
     is_verified: Joi.boolean().default(false)
         .messages({
             'boolean.base': 'Verification status must be true or false'
-        }),
+        })
 });
+
+
 
 const schemeSchema = Joi.object({
     schemeName: Joi.string().min(3).max(100).required()
@@ -302,3 +312,5 @@ module.exports = {
     UpdateuserSchema,
     userLoginSchema
 };
+
+

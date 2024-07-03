@@ -4,20 +4,49 @@ const ExpressError = require('../utils/ExpressError');
 const ExcelJS = require('exceljs');
 const path = require('path');
 const fs = require('fs');
-const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, WidthType, PageMargin, AlignmentType, HeadingLevel,convertInchesToTwip  } = require("docx");
+const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, HeadingLevel, AlignmentType, convertInchesToTwip } = require("docx");
 const { isValidObjectId } = require('mongoose');
 const randomstring = require('randomstring');
-const {  sendVerificationEmail,sendSchemeAddedEmail,sendSchemeUpdatedEmail,sendSchemeDeletedEmail} = require('../utils/mailer');
+const { sendVerificationEmail, sendSchemeAddedEmail, sendSchemeUpdatedEmail, sendSchemeDeletedEmail } = require('../utils/mailer');
 const UserForget = require('../models/UserForget');
-const {userSchema,schemeSchema, updateSchemeSchema,yearSchema,monthYearSchema, emailSchema, passwordResetSchema,UpdateuserSchema} = require('../validation/userValidation');
+const { userSchema, schemeSchema, updateSchemeSchema, UpdateuserSchema } = require('../validation/userValidation');
 
-
+// Helper function to ensure download directory exists
 const ensureDownloadDir = () => {
     const downloadsDir = path.join(__dirname, '../../public/downloads');
     if (!fs.existsSync(downloadsDir)) {
         fs.mkdirSync(downloadsDir, { recursive: true });
     }
     return downloadsDir;
+};
+
+// Helper function to get monthly schemes
+const getMonthlySchemes = async (userId, year) => {
+    const schemes = await Scheme.find({ userId, date: { $gte: new Date(year, 0, 1), $lt: new Date(parseInt(year) + 1, 0, 1) } });
+    const monthlySchemes = Array(12).fill(0);
+    schemes.forEach(scheme => {
+        const month = scheme.date.getMonth();
+        monthlySchemes[month]++;
+    });
+    return monthlySchemes;
+};
+
+// Helper function to group schemes by month
+const groupSchemesByMonth = (schemes) => {
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const grouped = {};
+    schemes.forEach(scheme => {
+        const monthName = months[scheme.date.getMonth()];
+        if (!grouped[monthName]) grouped[monthName] = [];
+        grouped[monthName].push(scheme);
+    });
+    return Object.entries(grouped).map(([monthName, schemes]) => ({ monthName, schemes }));
+};
+
+// Helper function to get month number
+const getMonthNumber = (monthName) => {
+    const months = { "January": 1, "February": 2, "March": 3, "April": 4, "May": 5, "June": 6, "July": 7, "August": 8, "September": 9, "October": 10, "November": 11, "December": 12 };
+    return months[monthName];
 };
 
 exports.dashboard = (req, res) => {
@@ -49,15 +78,17 @@ exports.createUserForm = (req, res) => {
 
 exports.createUser = async (req, res) => {
 
+
+    console.log("Body of request",	req.body);
     const { error } = userSchema.validate(req.body);
     if (error) {
         req.flash('error', error.details[0].message);
         res.redirect('/admin/createUser');
         return;
     }
-    const { username, name, accountNumber, email, mobile, role, password, startYear, endYear } = req.body;
+    const { username, name, accountNumber, email, mobile, role, password, startYear, endYear,is_verified} = req.body;
     
-    const is_verified = req.body.is_verified === 'on';
+    // const is_verified = req.body.is_verified === 'on';
     console.log(is_verified);
 
     let yearPeriod = [];
@@ -67,10 +98,33 @@ exports.createUser = async (req, res) => {
 
     try {
         // Check if the user already exists
-        const existingUser = await User.findOne({ username });
+        let existingUser = await User.findOne({ username });
         if (existingUser) {
             throw new Error('A user with the given username is already registered');
         }
+
+       let userAlreadyExists = await User.findOne({ email });
+        if (userAlreadyExists) {
+            throw new Error('A user with the given email is already registered');
+        }
+
+        userAlreadyExists = await User.findOne({ accountNumber });
+        if (userAlreadyExists) {
+            throw new Error('A user with the given account number is already registered');
+        }
+
+        userAlreadyExists = await User.findOne({ mobile });
+        if (userAlreadyExists) {
+            throw new Error('A user with the given mobile number is already registered');
+        }
+        
+        userAlreadyExists = await User.findOne({ name });
+        if (userAlreadyExists) {
+            throw new Error('A user with the given name is already registered');
+        }
+
+      
+
 
         const registeredUser = await User.register(new User({ username, name, accountNumber, email, mobile, role, yearPeriod, is_verified }), password);
 
@@ -108,43 +162,87 @@ exports.editUser = async (req, res) => {
     }
 };
 
+
 exports.updateUser = async (req, res) => {
-   
-    // const { error } = userSchema.validate(req.body);
-    // if (error) {
-    //     req.flash('error', error.details[0].message);
-    //     res.redirect(`/admin/users/${req.params.userId}`);
-    //     return;
-    // }
-
-    const { error } = UpdateuserSchema.validate(req.body);
-    if (error) {
-        req.flash('error', error.details[0].message);
-        res.redirect(`/admin/users/${req.params.userId}`);
-        return;
-    }
-
-    console.log(req.body);
+    console.log("Body of request", req.body);
 
     const { userId } = req.params;
-    const { username, name, accountNumber, email, mobile, role, startYear,is_verified, endYear } = req.body;
-    // const is_verified = req.body.is_verified === 'on';
+    const { username, name, accountNumber, email, mobile, role, startYear, endYear, is_verified } = req.body;
+
+
+    if (!username || typeof username !== 'string' || username.length < 3 || username.length > 30 || !/^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])/.test(username)) {
+        req.flash('error', 'Username must be a text string between 3 and 30 characters long, containing at least one uppercase letter, one number, and one special character.');
+        return res.redirect('/admin/manageUsers');
+    }
+    if (!name || typeof name !== 'string' || name.length < 2 || name.length > 50) {
+        req.flash('error', 'Name must be a text string between 2 and 50 characters long.');
+        return res.redirect('/admin/manageUsers');
+    }
+
+    if (!accountNumber || !/^[0-9]{14}$/.test(accountNumber)) {
+        req.flash('error', 'Account number must be 14 digits long.');
+        return res.redirect('/admin/manageUsers');
+    }
     
+    if (!email || typeof email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        req.flash('error', 'Email must be a valid email address.');
+        return res.redirect('/admin/manageUsers');
+    }
+       
+    if (!mobile || !/^[0-9]{10}$/.test(mobile)) {
+        req.flash('error', 'Mobile number must be 10 digits long.');
+        return res.redirect('/admin/manageUsers');
+    }
+     
+    if (!role || (role !== 'admin' && role !== 'user')) {
+        req.flash('error', 'Role must be either "admin" or "user".');
+        return res.redirect('/admin/manageUsers');
+    }
+
+    if (!startYear || typeof Number(startYear) !== 'number' || !Number.isInteger(Number(startYear)) || Number(startYear) < 1900 || Number(startYear) > 2100) {
+        req.flash('error', 'Start year must be Number between 1900 and 2100.');
+        return res.redirect('/admin/manageUsers');
+    }
+
+    if (!endYear || typeof Number(endYear) !== 'number' || !Number.isInteger(Number(endYear)) || Number(endYear) < 1900 || Number(endYear) > 2100) {
+        req.flash('error', 'End year must be Number between 1900 and 2100.');
+        return res.redirect('/admin/manageUsers');
+    }
+
+
+    console.log('User ID:', userId);
+    console.log('User ID Type:', typeof userId);
+
     let yearPeriod = [];
-    for (let year = parseInt(startYear); year <= parseInt(endYear); year++) {
+    for (let year = Number(startYear); year <= Number(endYear); year++) {
         yearPeriod.push(year);
     }
 
+    console.log('Constructed yearPeriod:', yearPeriod);
+
     try {
-        await User.findByIdAndUpdate(userId, { username, name, accountNumber, email, mobile, role, yearPeriod, is_verified });
+        const updatedUser = await User.findByIdAndUpdate(userId, {
+            username,
+            name,
+            accountNumber,
+            email,
+            mobile,
+            role,
+            yearPeriod,
+            is_verified,
+        }, { new: true });
+
+        console.log('Updated User:', updatedUser);
+
         req.flash('success', 'User updated successfully');
         res.redirect(`/admin/users/${startYear}`);
     } catch (err) {
-        console.error(err);
+        console.error('Error updating user:', err);
         req.flash('error', err.message);
         res.redirect('/admin/manageUsers');
     }
 };
+
 
 
 
@@ -227,88 +325,6 @@ exports.newSchemeForm = async (req, res) => {
         res.redirect('/admin/manageUsers');
     }
 };
-
-// exports.addScheme = async (req, res) => {
-//     try {
-
-//         const { error } = schemeSchema.validate(req.body);
-//         if (error) {
-//             req.flash('error', error.details[0].message);
-//             return res.redirect('/admin/schemes');
-//         }
-//         const { schemeName, schemeType, hoursWorked, date, selectedUsers, year ,completed } = req.body;
-
-//         const users = await User.find({ _id: { $in: selectedUsers }, yearPeriod: year });
-
-//         const schemes = users.map(user => ({
-//             schemeName,
-//             schemeType,
-//             hoursWorked,
-//             date,
-//             userId: user._id,
-//             year,
-//             completed
-//         }));
-
-//         await Scheme.insertMany(schemes);
-
-//         req.flash('success', 'Scheme added successfully to selected users');
-//         res.redirect('/admin/schemes');
-//     } catch (err) {
-//         console.error(err);
-//         req.flash('error', err.message);
-//         res.redirect('/admin/schemes');
-//     }
-// };
-
-// exports.editSchemeForm = async (req, res) => {
-//     const { year, scheme_id } = req.params;
-//     try {
-//         const scheme = await Scheme.findById(scheme_id);
-//         if (!scheme) {
-//             req.flash('error', 'Scheme not found');
-//             return res.redirect(`/admin/schemes/earn-learn-student/${year}`);
-//         }
-//         res.render('admin/editScheme', { year, scheme });
-//     } catch (err) {
-//         console.error(err);
-//         req.flash('error', 'Error fetching scheme');
-//         res.redirect(`/admin/schemes/earn-learn-student/${year}`);
-//     }
-// };
-
-// exports.updateScheme = async (req, res) => {
-//     const { scheme_id } = req.params;
-//     console.log(scheme_id);
-//     try {
-
-//         const { error } = updateSchemeSchema.validate(req.body);
-//         if (error) {
-//             req.flash('error', error.details[0].message);
-//             return res.redirect('/admin/schemes');
-//         }
-//         const { schemeName, schemeType, hoursWorked, date, completed } = req.body;
-               
-//         const year = new Date(date).getFullYear(); // Extract year from date
-
-//         await Scheme.findByIdAndUpdate(scheme_id, {
-//             schemeName,
-//             schemeType,
-//             hoursWorked,
-//             date,
-//             completed,
-//             year
-//         });
-
-
-//         req.flash('success', 'Scheme updated successfully');
-//         res.redirect(`/admin/schemes/earn-learn-student/${year}`);
-//     } catch (err) {
-//         console.error(err);
-//         req.flash('error', 'Error updating scheme');
-//         res.redirect('/admin/schemes');
-//     }
-// };
 
 exports.editSchemeForm = async (req, res) => {
     const { year, scheme_id } = req.params;
@@ -483,43 +499,7 @@ exports.getUsersByYear = async (req, res) => {
     }
 };
 
-function groupSchemesByMonth(schemes) {
-    const months = [
-        'January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'
-    ];
 
-    const grouped = {};
-    schemes.forEach(scheme => {
-        const monthIndex = scheme.date.getMonth();
-        const monthName = months[monthIndex];
-        if (!grouped[monthName]) grouped[monthName] = [];
-        grouped[monthName].push(scheme);
-    });
-
-    return Object.entries(grouped).map(([monthName, schemes]) => ({
-        monthName,
-        schemes
-    }));
-}
-
-function getMonthNumber(monthName) {
-    const months = {
-        "January": 1,
-        "February": 2,
-        "March": 3,
-        "April": 4,
-        "May": 5,
-        "June": 6,
-        "July": 7,
-        "August": 8,
-        "September": 9,
-        "October": 10,
-        "November": 11,
-        "December": 12
-    };
-    return months[monthName];
-}
 
 
 exports.schemesByUserAndYear = async (req, res) => {
@@ -1252,215 +1232,6 @@ exports.downloadGroundExcel = async (req, res) => {
         res.redirect(`/admin/schemes/${userId}`);
     }
 };
-
-const getMonthlySchemes = async (userId, year) => {
-    const schemes = await Scheme.find({ userId });
-    const monthlySchemes = Array(12).fill(0);
-
-    schemes.forEach(scheme => {
-        if (scheme.date.getFullYear() === parseInt(year)) {
-            const month = scheme.date.getMonth(); // getMonth() returns 0-based index
-            monthlySchemes[month]++;
-        }
-    });
-
-    return monthlySchemes;
-};
-
-
-// exports.downloadUsersDataWord = async (req, res) => {
-//     const { year } = req.params;
-
-//     try {
-//         const users = await User.find();
-//         const rows = [];
-
-//         for (const user of users) {
-//             const monthlySchemes = await getMonthlySchemes(user._id, year);
-//             const totalSchemes = monthlySchemes.reduce((acc, val) => acc + val, 0);
-
-//             // Only include users with schemes for the specified year
-//             if (totalSchemes > 0) {
-//                 const row = {
-//                     Username: user.username,
-//                     Name: user.name,
-//                     'Account Number': user.accountNumber,
-//                     Email: user.email,
-//                     Mobile: user.mobile,
-//                     Role: user.role,
-//                     Verified: user.verified ? 'Yes' : 'No',
-//                     'Jan Schemes': monthlySchemes[0],
-//                     'Feb Schemes': monthlySchemes[1],
-//                     'Mar Schemes': monthlySchemes[2],
-//                     'Apr Schemes': monthlySchemes[3],
-//                     'May Schemes': monthlySchemes[4],
-//                     'Jun Schemes': monthlySchemes[5],
-//                     'Jul Schemes': monthlySchemes[6],
-//                     'Aug Schemes': monthlySchemes[7],
-//                     'Sep Schemes': monthlySchemes[8],
-//                     'Oct Schemes': monthlySchemes[9],
-//                     'Nov Schemes': monthlySchemes[10],
-//                     'Dec Schemes': monthlySchemes[11],
-//                     'Total Schemes Completed': totalSchemes,
-//                     Action: ''
-//                 };
-
-//                 rows.push(row);
-//             }
-//         }
-
-//         if (rows.length === 0) {
-            
-//             req.flash('error', 'Any User In This Year Has Not Completed Any Schemes,So You Can Not Download Excel File.');
-//             throw new ExpressError('Any User In This Year Has Not Completed Any Schemes,So You Can Not Download Excel File.', 400);
-//         }
-
-//         const doc = new Document({
-//             sections: [{
-//                 properties: {
-//                     page: {
-//                         margin: {
-//                             top: convertInchesToTwip(0.5),
-//                             right: convertInchesToTwip(0.5),
-//                             bottom: convertInchesToTwip(0.5),
-//                             left: convertInchesToTwip(0.5)
-//                         }
-//                     }
-//                 },
-//                 children: [
-//                     new Paragraph({
-//                         text: `User Data for ${year}`,
-//                         heading: HeadingLevel.HEADING_1,
-//                         alignment: AlignmentType.CENTER,
-//                         spacing: {
-//                             before: 0,
-//                             after: 200
-//                         }
-//                     }),
-//                     new Table({
-//                         width: {
-//                             size: 100,
-//                             type: 'pct'
-//                         },
-//                         rows: [
-//                             new TableRow({
-//                                 children: Object.keys(rows[0]).map(header => new TableCell({ children: [new Paragraph(header)] })),
-//                                 height: {
-//                                     value: convertInchesToTwip(0.256),
-//                                     rule: 'exact'
-//                                 }
-//                             }),
-//                             ...rows.map(row => new TableRow({
-//                                 children: Object.values(row).map(value => new TableCell({ children: [new Paragraph(value.toString())] })),
-//                                 height: {
-//                                     value: convertInchesToTwip(0.256),
-//                                     rule: 'exact'
-//                                 }
-//                             }))
-//                         ]
-//                     })
-//                 ]
-//             }]
-//         });
-
-//         const buffer = await Packer.toBuffer(doc);
-//         const downloadsDir = ensureDownloadDir();
-//         const filePath = path.join(downloadsDir, `users_${year}.docx`);
-//         fs.writeFileSync(filePath, buffer);
-
-//         res.download(filePath, (err) => {
-//             if (err) {
-//                 req.flash('error', 'Any User In This Year Has Not Completed Any Schemes,So You Can Not Download Excel File.');
-//                 throw new ExpressError('Any User In This Year Has Not Completed Any Schemes,So You Can Not Download Excel File.', 400);
-//             } else {
-//                 fs.unlinkSync(filePath);
-//             }
-//         });
-
-//     } catch (err) {
-//         console.error(err);
-//         res.status(500).json({ error: 'Failed to export data' });
-//     }
-// };
-
-// exports.downloadUsersDataExcel = async (req, res) => {
-//     const { year } = req.params;
-
-//     try {
-//         const users = await User.find();
-//         const rows = [];
-
-//         for (const user of users) {
-//             const monthlySchemes = await getMonthlySchemes(user._id, year);
-//             const totalSchemes = monthlySchemes.reduce((acc, val) => acc + val, 0);
-
-//             // Only include users with schemes for the specified year
-//             if (totalSchemes > 0) {
-//                 const row = {
-//                     Username: user.username,
-//                     Name: user.name,
-//                     'Account Number': user.accountNumber,
-//                     Email: user.email,
-//                     Mobile: user.mobile,
-//                     Role: user.role,
-//                     Verified: user.verified ? 'Yes' : 'No',
-//                     'Jan Schemes': monthlySchemes[0],
-//                     'Feb Schemes': monthlySchemes[1],
-//                     'Mar Schemes': monthlySchemes[2],
-//                     'Apr Schemes': monthlySchemes[3],
-//                     'May Schemes': monthlySchemes[4],
-//                     'Jun Schemes': monthlySchemes[5],
-//                     'Jul Schemes': monthlySchemes[6],
-//                     'Aug Schemes': monthlySchemes[7],
-//                     'Sep Schemes': monthlySchemes[8],
-//                     'Oct Schemes': monthlySchemes[9],
-//                     'Nov Schemes': monthlySchemes[10],
-//                     'Dec Schemes': monthlySchemes[11],
-//                     'Total Schemes Completed': totalSchemes,
-//                     Action: ''
-//                 };
-
-//                 rows.push(row);
-//             }
-//         }
-
-//         if (rows.length === 0) {
-//             req.flash('error', 'Any User In This Year Has Not Completed Any Schemes,So You Can Not Download Excel File.');
-//             throw new ExpressError('Any User In This Year Has Not Completed Any Schemes,So You Can Not Download Excel File.', 400);
-             
-//         }
-
-//         const downloadsDir = ensureDownloadDir();
-//         const workbook = new ExcelJS.Workbook();
-//         const worksheet = workbook.addWorksheet(`Users_${year}`);
-        
-//         worksheet.columns = Object.keys(rows[0]).map(key => ({
-//             header: key, key, width: 20
-//         }));
-
-//         rows.forEach(row => {
-//             worksheet.addRow(row);
-//         });
-
-//         const excelFilePath = path.join(downloadsDir, `users_${year}.xlsx`);
-//         await workbook.xlsx.writeFile(excelFilePath);
-
-//         res.download(excelFilePath, (err) => {
-//             if (err) {
-//                 req.flash('error', 'Any User In This Year Has Not Completed Any Schemes,So You Can Not Download Excel File.');
-                
-//                 throw new ExpressError('Any User In This Year Has Not Completed Any Schemes,So You Can Not Download Excel File.', 400);
-
-//             } else {
-//                 fs.unlinkSync(excelFilePath);
-//             }
-//         });
-
-//     } catch (err) {
-//         console.error(err);
-//         res.status(500).json({ error: 'Failed to export data' });
-//     }
-// };
 
 
 

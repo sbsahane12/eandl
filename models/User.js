@@ -8,7 +8,6 @@ const UserSchema = new Schema({
     accountNumber: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     mobile: { type: String, required: true },
-    photo: { type: String },
     schemesCompleted: { type: Number, default: 0 },
     is_verified: { type: Boolean, default: false },
     role: { type: String, default: 'user' }, // user or admin

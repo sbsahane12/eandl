@@ -1,12 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const upload = require('../utils/multer');
 
 const userController = require('../controllers/userController');
 const { isLoggedIn } = require('../middleware');
 
 router.get('/signup', userController.signupForm);
-router.post('/signup', upload.single('photo'), userController.signup);
+router.post('/signup',userController.signup);
 
 router.get('/login', userController.loginForm);
 router.post('/login', userController.login);

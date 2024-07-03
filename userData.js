@@ -19,7 +19,6 @@ mongoose.connect(process.env.MONGODB_URI).then(async () => {
                 accountNumber: 'ACC001',
                 email: 'user1@example.com',
                 mobile: '1234567890',
-                photo: 'user1.jpg',
                 role: 'admin',
                 is_verified: true,
                 yearPeriod: [2023, 2024] // example array of years
@@ -30,7 +29,6 @@ mongoose.connect(process.env.MONGODB_URI).then(async () => {
                 accountNumber: 'ACC002',
                 email: 'user2@example.com',
                 mobile: '2345678901',
-                photo: 'user2.jpg',
                 yearPeriod: [2023, 2024]
             },
             {
@@ -39,8 +37,7 @@ mongoose.connect(process.env.MONGODB_URI).then(async () => {
                 accountNumber: 'ACC003',
                 email: 'user3@example.com',
                 mobile: '3456789012',
-                photo: 'user3.jpg',
-                yearPeriod: [2024]
+                yearPeriod: [2023,2024]
             },
             {
                 username: 'user4',
@@ -48,7 +45,6 @@ mongoose.connect(process.env.MONGODB_URI).then(async () => {
                 accountNumber: 'ACC004',
                 email: 'user4@example.com',
                 mobile: '4567890123',
-                photo: 'user4.jpg',
                 yearPeriod: [2024]
             }
         ];
@@ -62,7 +58,6 @@ mongoose.connect(process.env.MONGODB_URI).then(async () => {
                 accountNumber: user.accountNumber,
                 email: user.email,
                 mobile: user.mobile,
-                photo: user.photo,
                 yearPeriod: user.yearPeriod
             });
             await User.register(newUser, 'password'); // assuming a default password 'password'
