@@ -128,72 +128,6 @@ const userLoginSchema = Joi.object({
             'any.required': 'Password is required'
         })
 });
-const UpdateuserSchema = Joi.object({
-    
-    username: Joi.string().min(3).max(30).required()
-        .pattern(new RegExp('^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])'))
-        .messages({
-            'string.base': 'Username must be a text string',
-            'string.empty': 'Username is required',
-            'string.min': 'Username must be at least 3 characters long',
-            'string.max': 'Username cannot exceed 30 characters',
-            'string.pattern.base': 'Username must contain at least one uppercase letter, one number, and one special character',
-            'any.required': 'Username is required'
-        }),
-    name: Joi.string().min(2).max(50).required()
-        .messages({
-            'string.base': 'Name must be a text string',
-            'string.empty': 'Name is required',
-            'string.min': 'Name must be at least 2 characters long',
-            'string.max': 'Name cannot exceed 50 characters',
-            'any.required': 'Name is required'
-        }),
-    accountNumber: Joi.string().pattern(/^[0-9]{14}$/).required()
-        .messages({
-            'string.pattern.base': 'Account number must be 14 digits long',
-            'string.empty': 'Account number is required',
-            'any.required': 'Account number is required'
-        }),
-    email: Joi.string().email().required()
-        .messages({
-            'string.email': 'Please enter a valid email address',
-            'string.empty': 'Email is required',
-            'any.required': 'Email is required'
-        }),
-    mobile: Joi.string().pattern(/^[0-9]{10}$/).required()
-        .messages({
-            'string.pattern.base': 'Mobile number must be 10 digits long',
-            'string.empty': 'Mobile number is required',
-            'any.required': 'Mobile number is required'
-        }),
-    role: Joi.string().valid('admin', 'user').required()
-        .messages({
-            'any.only': 'Role must be either admin or user',
-            'string.empty': 'Role is required',
-            'any.required': 'Role is required'
-        }),
-    startYear: Joi.number().integer().min(1900).max(2100).required()
-        .messages({
-            'number.base': 'Start year must be a number',
-            'number.integer': 'Start year must be an integer',
-            'number.min': 'Start year must be 1900 or later',
-            'number.max': 'Start year cannot be after 2100',
-            'any.required': 'Start year is required'
-        }),
-    endYear: Joi.number().integer().min(1900).max(2100).required()
-        .messages({
-            'number.base': 'End year must be a number',
-            'number.integer': 'End year must be an integer',
-            'number.min': 'End year must be 1900 or later',
-            'number.max': 'End year cannot be after 2100',
-            'any.required': 'End year is required'
-        }),
-    is_verified: Joi.boolean().default(false)
-        .messages({
-            'boolean.base': 'Verification status must be true or false'
-        })
-});
-
 
 
 const schemeSchema = Joi.object({
@@ -309,7 +243,6 @@ module.exports = {
     monthYearSchema,
     emailSchema,
     passwordResetSchema,
-    UpdateuserSchema,
     userLoginSchema
 };
 

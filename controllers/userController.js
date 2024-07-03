@@ -81,8 +81,6 @@ exports.signup = async (req, res) => {
     }
 };
 
-// ... (keep other functions as they are)
-
 exports.getProfile = async (req, res) => {
     try {
         const userId = req.user._id;

@@ -9,9 +9,7 @@ const { isValidObjectId } = require('mongoose');
 const randomstring = require('randomstring');
 const { sendVerificationEmail, sendSchemeAddedEmail, sendSchemeUpdatedEmail, sendSchemeDeletedEmail } = require('../utils/mailer');
 const UserForget = require('../models/UserForget');
-const { userSchema, schemeSchema, updateSchemeSchema, UpdateuserSchema } = require('../validation/userValidation');
-
-// Helper function to ensure download directory exists
+const { userSchema, schemeSchema, updateSchemeSchema, } = require('../validation/userValidation');
 const ensureDownloadDir = () => {
     const downloadsDir = path.join(__dirname, '../../public/downloads');
     if (!fs.existsSync(downloadsDir)) {
@@ -20,7 +18,7 @@ const ensureDownloadDir = () => {
     return downloadsDir;
 };
 
-// Helper function to get monthly schemes
+
 const getMonthlySchemes = async (userId, year) => {
     const schemes = await Scheme.find({ userId, date: { $gte: new Date(year, 0, 1), $lt: new Date(parseInt(year) + 1, 0, 1) } });
     const monthlySchemes = Array(12).fill(0);
@@ -31,7 +29,6 @@ const getMonthlySchemes = async (userId, year) => {
     return monthlySchemes;
 };
 
-// Helper function to group schemes by month
 const groupSchemesByMonth = (schemes) => {
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     const grouped = {};
@@ -43,7 +40,6 @@ const groupSchemesByMonth = (schemes) => {
     return Object.entries(grouped).map(([monthName, schemes]) => ({ monthName, schemes }));
 };
 
-// Helper function to get month number
 const getMonthNumber = (monthName) => {
     const months = { "January": 1, "February": 2, "March": 3, "April": 4, "May": 5, "June": 6, "July": 7, "August": 8, "September": 9, "October": 10, "November": 11, "December": 12 };
     return months[monthName];
