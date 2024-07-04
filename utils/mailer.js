@@ -36,7 +36,7 @@ const sendVerificationEmail = (email, token) => {
                     If you did not request this verification, please ignore this email.
                 </p>
                 <p style="font-size: 14px; color: #777777;">
-                    Best regards,<br>Your Company Name
+                    Best regards,<br>Earn and Learn Scheme Department
                 </p>
             </div>
         `
@@ -67,7 +67,7 @@ const sendPasswordResetEmail = (email, token) => {
                     If you did not request a password reset, please ignore this email or contact support if you have questions.
                 </p>
                 <p style="font-size: 14px; color: #777777;">
-                    Best regards,<br>Your Company Name
+                    Best regards,<br>Earn and Learn Scheme Department
                 </p>
             </div>
         `
@@ -96,7 +96,7 @@ const sendSchemeDeletedEmail = (email, { schemeName, schemeType, year }) => {
                     If you have any questions, please contact support.
                 </p>
                 <p style="font-size: 14px; color: #777777;">
-                    Best regards,<br>Your Company Name
+                    Best regards,<br>Earn and Learn Scheme Department
                 </p>
             </div>
         `
@@ -169,13 +169,49 @@ const sendSchemeUpdatedEmail = (email, { schemeName, schemeType, hoursWorked, da
 };
 
 
+const sendQueryHandledEmail = (email, query) => {
+    const mailOptions = {
+        from: process.env.EMAIL,
+        to: email,
+        subject: 'Query Handled',
+        html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #cccccc; border-radius: 10px;">
+                <h2 style="text-align: center; color: #4CAF50;">Query Handled</h2>
+                <p style="font-size: 16px; color: #333333;">
+                    Your query has been handled.
+                </p>
+                
+                <p><strong>Query:</strong> ${query}</p>
+                <p style="font-size: 14px; color: #777777;">
+                    Best regards,<br>Earn and Learn Scheme Department
+                </p>
+                
+            </div>
+        `
+    };
+
+    return new Promise((resolve, reject) => {
+        transporter.sendMail(mailOptions, (err, info) => {
+            if (err) {
+                console.error(err);
+                reject(err);
+            } else {
+                console.log(`Email sent: ${info.response}`);
+                resolve(info);
+            }
+        });
+    });
+};
+
+
 
 module.exports = {
     sendVerificationEmail,
     sendPasswordResetEmail,
     sendSchemeAddedEmail,
     sendSchemeUpdatedEmail,
-    sendSchemeDeletedEmail
+    sendSchemeDeletedEmail,
+    sendQueryHandledEmail,
 };
 
 

@@ -21,19 +21,74 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/user/profile" style="color: white;">User Profile</a>
                         </li>
+                        <li>
+                        
+                            <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#contactUsModal" style="color: white;">Contact Us</a>
+                        
+                            </li>
                     <% } %>
                     <li class="nav-item">
                         <a href="/user/logout" class="btn btn-danger">Logout</a>
+
                     </li>
                 <% } else { %>
                     <li class="nav-item">
                         <a class="nav-link" href="/user/login" style="color: white;">Login</a>
+
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/user/signup" style="color: white;">Sign Up</a>
                     </li>
+                  
+             
                 <% } %>
             </ul>
         </div>
     </div>
+
 </nav>
+
+
+
+<div class="modal fade" id="contactUsModal" tabindex="-1" aria-labelledby="contactUsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="/user/contact" method="POST" class="needs-validation" novalidate>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="contactUsModalLabel" style="color: #c471f5;"><i class="bi bi-question-circle-fill"></i> Contact Us</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Username input -->
+                    <div class="mb-3">
+                        <label for="username" class="form-label" style="color: #c471f5;"><i class="bi bi-person-fill"></i> Username</label>
+                        <input type="text" class="form-control" id="username" name="username" style="color: #c471f5; border-color: #c471f5;" required>
+                        <div class="invalid-feedback" style="color: #c471f5;">
+                            Please provide your username.
+                        </div>
+                    </div>
+                    <!-- Full name input -->
+                    <div class="mb-3">
+                        <label for="fullname" class="form-label" style="color: #c471f5;"><i class="bi bi-person-lines-fill"></i> Full Name</label>
+                        <input type="text" class="form-control" id="fullname" name="fullname" style="color: #c471f5; border-color: #c471f5;" required>
+                        <div class="invalid-feedback" style="color: #c471f5;">
+                            Please provide your full name.
+                        </div>
+                    </div>
+                    <!-- Query input -->
+                    <div class="mb-3">
+                        <label for="query" class="form-label" style="color: #c471f5;"><i class="bi bi-chat-text-fill"></i> Query</label>
+                        <textarea class="form-control" id="query" name="query" rows="3" style="color: #c471f5; border-color: #c471f5;" required></textarea>
+                        <div class="invalid-feedback" style="color: #c471f5;">
+                            Please describe your query.
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" style="background-color: #c471f5; border-color: #c471f5;">Send</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

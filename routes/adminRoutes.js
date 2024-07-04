@@ -33,6 +33,9 @@ router.get('/schemes/earn-learn-student/:userId/:year/schemes/download-ground-wo
 
 router.get('/schemes/earn-learn-student/:userId/:year/schemes/download-department-excel/:month',isLoggedIn, isAdmin,adminController.downloadDepartmentExcel);
 router.get('/schemes/earn-learn-student/:userId/:year/schemes/download-department-word/:month',isLoggedIn, isAdmin,adminController.downloadDepartmentWord);
+
+router.get('/contacts',isLoggedIn,isAdmin, adminController.getContacts);
+router.get('/handle-query/:contactId',isLoggedIn,isAdmin, adminController.handleQuery);
 module.exports= router;
 
 

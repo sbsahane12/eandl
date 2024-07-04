@@ -25,6 +25,8 @@ router.get('/schemes/:year', isLoggedIn, userController.getSchemesByYear);
 
 router.get('/schemes/:year/:month', isLoggedIn, userController.getSchemesByMonth);
 
+router.post('/contact', userController.submitContactForm);
+
 router.get('/downloadMonthWiseReport', userController.downloadMonthWiseReport);
 router.get('/downloadYearWiseReport', userController.downloadYearWiseReport);
 module.exports = router;

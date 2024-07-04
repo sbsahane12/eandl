@@ -1,0 +1,97 @@
+<% layout('layouts/adminboilerplate') %>
+<body>
+    <% if (contacts.length > 0) { %>
+    <div class="container mt-5 ">
+        <h2 style="color: #c471f5;" class="text-center"><b>Earn And Learn Students Queries</b></h2>
+        <hr>
+        <div class="search-container mb-3 text-center">
+            <input type="text" id="searchInput" onkeyup="searchUsers()" class="form-control col-lg-6 col-md-8 col-sm-10" placeholder="Search the Queries Of All User..." style="color: #c471f5; border-color: #c471f5;">
+        </div>
+        <hr class="my-2">
+        <!-- Users Table -->
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>User Avatar</th>
+                        <th>Username</th>
+                        <th>Full Name</th>
+                        <th>Query</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% contacts.forEach(contact => { %>
+                        <tr>
+                            <td>
+                                <img
+                                    src="https://mdbootstrap.com/img/new/avatars/8.jpg"
+                                    alt=""
+                                    style="width: 45px; height: 45px"
+                                    class="rounded-circle"
+                                />
+                            </td>
+                            <td><%= contact.username %></td>
+                            <td><%= contact.fullname %></td>
+                            <td><%= contact.query %></td>
+                            <td>
+                                <a href="/admin/handle-query/<%= contact._id %>" class="btn btn-primary btn-sm" style="background-color: #c471f5; color: white;">Solved</a>
+                            </td> 
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <% } else { %>
+    <div class="container mt-5 " style="margin-bottom: 200px;">
+        <h2 style="color: #c471f5;" class="text-center"><b>There Are No Queries To Show</b></h2>
+
+    </div>
+    <% } %>
+
+    
+
+    <style>
+        .form-control-sm {
+            max-width: 300px;
+        }
+        .table-responsive {
+            overflow-x: auto;
+        }
+        table, thead, td, th {
+            background-color: #f8f9fa;
+            color: #c471f5;
+            text-align: center;
+            border: 2px solid #c471f5;
+        }
+    </style>
+
+    <script>
+        function searchUsers() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toUpperCase();
+            const rows = document.getElementsByTagName('tr');
+
+            for (let i = 1; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName('td');
+                let found = false;
+                for (let j = 0; j < cells.length; j++) {
+                    const cell = cells[j];
+                    if (cell) {
+                        const txtValue = cell.textContent || cell.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+                if (found) {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+        }
+    </script>
+</body>

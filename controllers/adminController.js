@@ -7,9 +7,10 @@ const fs = require('fs');
 const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, HeadingLevel, AlignmentType, convertInchesToTwip } = require("docx");
 const { isValidObjectId } = require('mongoose');
 const randomstring = require('randomstring');
-const { sendVerificationEmail, sendSchemeAddedEmail, sendSchemeUpdatedEmail, sendSchemeDeletedEmail } = require('../utils/mailer');
+const { sendVerificationEmail, sendSchemeAddedEmail, sendSchemeUpdatedEmail, sendSchemeDeletedEmail ,sendQueryHandledEmail} = require('../utils/mailer');
 const UserForget = require('../models/UserForget');
 const { userSchema, schemeSchema, updateSchemeSchema, } = require('../validation/userValidation');
+const Contact = require('../models/Contact');
 const ensureDownloadDir = () => {
     const downloadsDir = path.join(__dirname, '../../public/downloads');
     if (!fs.existsSync(downloadsDir)) {
@@ -1421,3 +1422,50 @@ exports.downloadUsersDataExcel = async (req, res) => {
         res.redirect('/admin/manageUsers');
     }
 };
+
+
+// controllers/adminController.js
+
+
+
+exports.getContacts = async (req, res) => {
+    try {
+        const contacts = await Contact.find();
+        res.render('admin/contact', { contacts });
+    } catch (err) {
+        console.error(err);
+        req.flash('error', 'Error fetching contacts.');
+        res.redirect('/admin/contacts');
+    }
+};
+
+exports.handleQuery = async (req, res) => {
+    const { contactId } = req.params;
+    try {
+
+
+        console.log(contactId);
+        const contact = await Contact.findById(contactId);
+        if (!contact) {
+            req.flash('error', 'Contact not found.');
+            return res.redirect('/admin/contacts');
+        }
+
+        const user = await User.findOne({ username: contact.username });
+        if (!user) {
+            // Delete contact if user not found in the database
+            await Contact.findByIdAndDelete(contactId);
+            return res.status(404).send('User not found in the database. Query deleted.');
+        }
+
+        // Send email to the user
+        await sendQueryHandledEmail(user.email, contact.query);
+        // Delete the contact entry after email is sent
+        await Contact.findByIdAndDelete(contactId);
+        res.redirect('/admin/contacts');
+    } catch (err) {
+        res.status(500).send('Server error.');
+    }
+};
+
+

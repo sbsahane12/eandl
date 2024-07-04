@@ -6,6 +6,7 @@ const randomstring = require('randomstring');
 const { sendVerificationEmail, sendPasswordResetEmail } = require('../utils/mailer');
 const {userSchema,emailSchema, passwordResetSchema,userLoginSchema} = require('../validation/userValidation');
 const ExpressError = require('../utils/ExpressError');
+const Contact = require('../models/Contact');
 exports.signupForm = (req, res) => {
     res.render('user/signup');
 };
@@ -389,4 +390,44 @@ exports.downloadYearWiseReport = async (req, res) => {
     }
 };
 
-// ... (keep the existing helper functions for report generation)
+exports.submitContactForm = async (req, res) => {
+    const { username, fullname, query } = req.body;
+    console.log(username, fullname, query);
+
+    if (!username || !fullname || !query) {
+        req.flash('error', 'All fields are required.');
+        return res.redirect('/');
+    }
+
+    if (query.length < 10) {
+        req.flash('error', 'Query should be at least 10 characters long.');
+        return res.redirect('/');
+    }
+
+    if (query.length > 500) {
+        req.flash('error', 'Query should be less than 500 characters long.');
+        return res.redirect('/');
+    }
+
+    if (!fullname || typeof fullname !== 'string' || fullname.length < 2 || fullname.length > 50) {
+        req.flash('error', 'Name must be a text string between 2 and 50 characters long.');
+        return res.redirect('/admin/manageUsers');
+    }
+
+    try {
+        const user = await User.findOne({ username });
+        if (!user) {
+            req.flash('error', 'User not found.');
+            return res.redirect('/');
+        }
+
+        const contact = new Contact({ username, fullname, query });
+        await contact.save();
+        req.flash('success', 'Your query has been submitted. We will get back to you soon.');
+        res.redirect('/');
+    } catch (err) {
+        console.error(err);
+            req.flash('error', err.message);
+            res.redirect('/');
+    }
+};
