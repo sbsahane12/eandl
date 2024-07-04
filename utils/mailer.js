@@ -81,19 +81,25 @@ const sendPasswordResetEmail = (email, token) => {
 
 
 
-const sendSchemeDeletedEmail = (email, { schemeName, schemeType, year }) => {
+const sendSchemeDeletedEmail = (email, { schemeName, schemeType,date,hoursWorked, year }) => {
     const mailOptions = {
         from: process.env.SMTP_MAIL,
         to: email,
-        subject: 'Scheme Deleted',
+        subject:` Scheme ${schemeName} (${schemeType}) Deleted`,
         html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #cccccc; border-radius: 10px;">
                 <h2 style="text-align: center; color: #ff6347;">Scheme Deleted</h2>
                 <p style="font-size: 16px; color: #333333;">
                     The scheme "${schemeName}" (${schemeType}) for year ${year} has been deleted.
                 </p>
+                <p style="font-size: 16px; color: #333333;">
+                    Hours Worked: ${hoursWorked}
+                </p>
+                <p style="font-size: 16px; color: #333333;">
+                    Date: ${date}
+                </p>
                 <p style="font-size: 14px; color: #777777;">
-                    If you have any questions, please contact support.
+                    If you have any questions, please use the contact support.
                 </p>
                 <p style="font-size: 14px; color: #777777;">
                     Best regards,<br>Earn and Learn Scheme Department

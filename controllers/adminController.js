@@ -458,6 +458,8 @@ exports.deleteScheme = async (req, res) => {
         const emailContent = {
             schemeName: deletedScheme.schemeName,
             schemeType: deletedScheme.schemeType,
+            hoursWorked: deletedScheme.hoursWorked,
+            date: deletedScheme.date,
             year: deletedScheme.year
         };
         sendSchemeDeletedEmail(user.email, emailContent);
