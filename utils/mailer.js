@@ -98,6 +98,9 @@ const sendSchemeDeletedEmail = (email, { schemeName, schemeType,date,hoursWorked
                 <p style="font-size: 16px; color: #333333;">
                     Date: ${date}
                 </p>
+                <p style="font-size: 16px; color: #333333;">
+                    Your Scheme Is Deleted Due By The Earn and Learn Scheme Department.
+                </p>
                 <p style="font-size: 14px; color: #777777;">
                     If you have any questions, please use the contact support.
                 </p>
@@ -148,12 +151,12 @@ const sendSchemeUpdatedEmail = (email, { schemeName, schemeType, hoursWorked, da
     const mailOptions = {
         from: process.env.SMTP_MAIL,
         to: email,
-        subject: 'Scheme Updated',
+        subject: `Scheme ${schemeName} of  this ${date} has been Updated`,
         html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #cccccc; border-radius: 10px;">
                 <h2 style="text-align: center; color: #ff6347;">Scheme Updated</h2>
                 <p style="font-size: 16px; color: #333333;">
-                    A scheme has been updated.
+                    A scheme ${schemeName} has been updated.
                 </p>
                 <p><strong>Scheme Name:</strong> ${schemeName}</p>
                 <p><strong>Scheme Type:</strong> ${schemeType}</p>
@@ -184,7 +187,7 @@ const sendQueryHandledEmail = (email, query) => {
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #cccccc; border-radius: 10px;">
                 <h2 style="text-align: center; color: #4CAF50;">Query Handled</h2>
                 <p style="font-size: 16px; color: #333333;">
-                    Your query has been handled.
+                    Your query has been Solved successfully and we will contact you soon.
                 </p>
                 
                 <p><strong>Query:</strong> ${query}</p>

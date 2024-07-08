@@ -440,10 +440,9 @@ exports.updateScheme = async (req, res) => {
 
 
 exports.deleteScheme = async (req, res) => {
-    const { scheme_id } = req.params; // Correctly access scheme_id from params
+    const { scheme_id } = req.params; 
 
     try {
-        // Find the scheme to be deleted
         const deletedScheme = await Scheme.findById(scheme_id);
         if (!deletedScheme) {
             req.flash('error', 'Scheme not found');
@@ -454,7 +453,7 @@ exports.deleteScheme = async (req, res) => {
         await Scheme.findByIdAndDelete(scheme_id);
 
         // Send email notification to affected user
-        const user = await User.findById(deletedScheme.userId); // Assuming Scheme model has userId field
+        const user = await User.findById(deletedScheme.userId); 
         const emailContent = {
             schemeName: deletedScheme.schemeName,
             schemeType: deletedScheme.schemeType,

@@ -7,7 +7,6 @@ const passport = require('passport');
 const methodOverride = require('method-override');
 const LocalStrategy = require('passport-local').Strategy;
 const User = require('./models/User');
-const expressLayouts = require('express-ejs-layouts');
 const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const ejsMate = require('ejs-mate');
@@ -15,15 +14,11 @@ const path = require('path');
 const app = express();
 
 
-// Database connection
 mongoose.connect(process.env.MONGODB_URI).then(() => {
     console.log('Database connected');
 }).catch(err => {
     console.log('Database connection error:', err);
 });
-
-// Middleware
-
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
